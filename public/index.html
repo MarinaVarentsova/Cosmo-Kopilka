@@ -1,0 +1,1307 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Космо-копилка</title>
+    <style>
+:root {
+  color-scheme: light;
+  --bg: #fff7df;
+  --ink: #233047;
+  --muted: #67708a;
+  --panel: rgba(255, 255, 255, 0.9);
+  --line: #e7dca9;
+  --sun: #ffcc4d;
+  --coral: #ff6b6b;
+  --mint: #23b99a;
+  --sky: #4d9de0;
+  --grape: #7d5fff;
+  --leaf: #2e8f6d;
+  --danger: #d94f60;
+  --shadow: 0 16px 34px rgba(108, 78, 21, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 204, 77, 0.42), transparent 22%),
+    radial-gradient(circle at 88% 10%, rgba(77, 157, 224, 0.24), transparent 24%),
+    radial-gradient(circle at 80% 84%, rgba(35, 185, 154, 0.22), transparent 26%),
+    var(--bg);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app {
+  width: min(1180px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 26px 0;
+}
+
+.hero {
+  min-height: 260px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(240px, 0.75fr) minmax(280px, 0.85fr);
+  gap: 18px;
+  align-items: stretch;
+  margin-bottom: 18px;
+}
+
+.hero-copy,
+.balance-card,
+.panel {
+  border: 3px solid rgba(35, 48, 71, 0.08);
+  border-radius: 22px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  padding: 28px;
+  display: grid;
+  align-content: center;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--leaf);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 14px;
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+  letter-spacing: 0;
+}
+
+p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.rocket-stage {
+  position: relative;
+  min-height: 260px;
+  overflow: hidden;
+  border-radius: 22px;
+  background:
+    linear-gradient(160deg, #2f3f88, #5d77da 58%, #91d7ff);
+  box-shadow: var(--shadow);
+}
+
+.rocket {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 72px;
+  height: 126px;
+  transform: translate(-50%, -50%) rotate(18deg);
+  border-radius: 48% 48% 18px 18px;
+  background: linear-gradient(90deg, #ffffff, #dff2ff);
+  border: 4px solid #26325e;
+}
+
+.rocket::before {
+  content: "";
+  position: absolute;
+  inset: -22px 16px auto;
+  height: 32px;
+  border-radius: 50% 50% 0 0;
+  background: var(--coral);
+  border: 4px solid #26325e;
+}
+
+.rocket-window {
+  position: absolute;
+  left: 18px;
+  top: 28px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--sky);
+  border: 4px solid #26325e;
+}
+
+.rocket-fin {
+  position: absolute;
+  bottom: 10px;
+  width: 28px;
+  height: 42px;
+  background: var(--sun);
+  border: 4px solid #26325e;
+}
+
+.rocket-fin.left {
+  left: -22px;
+  border-radius: 18px 0 12px 18px;
+}
+
+.rocket-fin.right {
+  right: -22px;
+  border-radius: 0 18px 18px 12px;
+}
+
+.rocket-fire {
+  position: absolute;
+  left: 18px;
+  bottom: -48px;
+  width: 30px;
+  height: 56px;
+  border-radius: 0 0 50% 50%;
+  background: linear-gradient(#ff9f1c, #ff4d4d);
+}
+
+.planet,
+.coin {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.planet-blue {
+  width: 82px;
+  height: 82px;
+  left: 18px;
+  bottom: 20px;
+  background: #56d6c9;
+  box-shadow: inset -12px -12px 0 rgba(35, 48, 71, 0.16);
+}
+
+.planet-yellow {
+  width: 42px;
+  height: 42px;
+  right: 28px;
+  top: 28px;
+  background: var(--sun);
+}
+
+.coin {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: var(--sun);
+  border: 4px solid #26325e;
+  color: #26325e;
+  font-weight: 900;
+}
+
+.coin-one {
+  left: 30px;
+  top: 24px;
+}
+
+.coin-two {
+  right: 26px;
+  bottom: 38px;
+}
+
+.coin-three {
+  left: 55%;
+  bottom: 20px;
+}
+
+.balance-card {
+  padding: 26px;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, #ffffff, #fff1bd);
+}
+
+.balance-card span,
+.balance-card small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.balance-card strong {
+  font-size: clamp(34px, 5vw, 58px);
+  line-height: 1;
+}
+
+.kid-grid {
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.main-column {
+  display: grid;
+  gap: 18px;
+}
+
+.panel {
+  padding: 20px;
+}
+
+.section-title,
+.history-title,
+.progress-top {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+output {
+  min-width: max-content;
+  border-radius: 999px;
+  background: #fff1bd;
+  color: var(--ink);
+  padding: 8px 12px;
+  font-weight: 900;
+}
+
+.range-xl,
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--grape);
+}
+
+.range-xl {
+  height: 44px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  cursor: grab;
+}
+
+.quick-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--mint);
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(35, 48, 71, 0.12);
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 5px 0 rgba(35, 48, 71, 0.12);
+}
+
+button.secondary {
+  background: var(--sky);
+}
+
+button.ghost,
+button.chip {
+  border: 2px solid rgba(35, 48, 71, 0.12);
+  background: white;
+  color: var(--ink);
+}
+
+button.danger {
+  color: var(--danger);
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  min-height: 44px;
+  border: 2px solid rgba(35, 48, 71, 0.12);
+  border-radius: 14px;
+  background: white;
+  color: var(--ink);
+  padding: 10px 12px;
+}
+
+input:focus,
+select:focus,
+button:focus {
+  outline: 4px solid rgba(125, 95, 255, 0.2);
+  outline-offset: 2px;
+}
+
+.name-field,
+.note-field,
+.select-field,
+.slider-field {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.name-field span,
+.note-field span,
+.select-field span,
+.slider-field span {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.slider-field {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.slider-field input {
+  grid-column: 1 / -1;
+}
+
+.goal-meter {
+  margin-top: 18px;
+}
+
+.goal-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.goal-card {
+  min-height: 78px;
+  display: grid;
+  gap: 8px;
+  align-content: center;
+  text-align: left;
+  border: 3px solid rgba(35, 48, 71, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: none;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.goal-card.active {
+  border-color: rgba(125, 95, 255, 0.55);
+  background: #f3efff;
+}
+
+.goal-card span,
+.goal-card strong {
+  position: relative;
+  z-index: 1;
+}
+
+.goal-card span {
+  font-weight: 900;
+}
+
+.goal-card strong {
+  color: var(--muted);
+}
+
+.goal-card i {
+  position: absolute;
+  inset: auto auto 0 0;
+  height: 10px;
+  max-width: 100%;
+  border-radius: 0 999px 999px 0;
+  background: linear-gradient(90deg, var(--mint), var(--sky), var(--grape));
+}
+
+.goal-remove {
+  min-height: 36px;
+  border: 2px dashed rgba(217, 79, 96, 0.36);
+  background: white;
+  color: var(--danger);
+  box-shadow: none;
+}
+
+.add-goal {
+  min-width: 88px;
+}
+
+.progress-track {
+  height: 22px;
+  border: 3px solid rgba(35, 48, 71, 0.08);
+  border-radius: 999px;
+  background: #fff4c8;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--mint), var(--sky), var(--grape));
+  transition: width 180ms ease;
+}
+
+#goalLeft {
+  margin-top: 9px;
+  font-weight: 800;
+}
+
+#goalLeft span,
+.scenario-card em {
+  display: inline-block;
+  border-radius: 999px;
+  background: #e6f7ff;
+  color: #23528c;
+  font-style: normal;
+  font-weight: 900;
+  padding: 4px 9px;
+}
+
+#goalLeft span {
+  margin-left: 6px;
+}
+
+.action-panel,
+.transaction-form {
+  display: grid;
+  gap: 16px;
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: 18px;
+}
+
+.scenario-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.scenario-card {
+  min-height: 128px;
+  border: 3px solid rgba(35, 48, 71, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  padding: 14px;
+  display: grid;
+  align-content: space-between;
+  gap: 9px;
+}
+
+.scenario-card span {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.scenario-card strong {
+  font-size: 22px;
+}
+
+.scenario-card em {
+  width: fit-content;
+}
+
+.scenario-card small {
+  color: var(--leaf);
+  font-weight: 900;
+}
+
+.chart {
+  height: 282px;
+  display: flex;
+  align-items: end;
+  gap: 7px;
+  padding-top: 12px;
+}
+
+.bar {
+  flex: 1;
+  min-width: 10px;
+  border-radius: 10px 10px 4px 4px;
+  background: linear-gradient(180deg, var(--sun), var(--coral));
+  position: relative;
+}
+
+.bar::before {
+  content: "";
+  position: absolute;
+  inset: 7px 6px auto;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.46);
+}
+
+.bar span {
+  position: absolute;
+  inset: auto 50% -24px auto;
+  transform: translateX(50%);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.history-list {
+  display: grid;
+  gap: 8px;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  border-top: 2px dashed rgba(35, 48, 71, 0.12);
+  padding-top: 10px;
+}
+
+.history-item strong.deposit,
+.history-item strong.interest,
+.history-item strong.set {
+  color: var(--leaf);
+}
+
+.history-item strong.withdraw {
+  color: var(--danger);
+}
+
+.empty {
+  border: 2px dashed rgba(35, 48, 71, 0.14);
+  border-radius: 18px;
+  padding: 16px;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 980px) {
+  .hero,
+  .kid-grid,
+  .layout,
+  .scenario-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rocket-stage {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 620px) {
+  .app {
+    width: min(100% - 20px, 1180px);
+    padding: 16px 0;
+  }
+
+  .hero-copy,
+  .balance-card,
+  .panel {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .section-title,
+  .history-title,
+  .progress-top {
+    display: grid;
+  }
+
+  .button-row,
+  .quick-buttons,
+  .scenario-list {
+    grid-template-columns: 1fr;
+  }
+
+  .history-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="hero" aria-label="Главная панель">
+        <div class="hero-copy">
+          <p class="eyebrow">Мой семейный вклад</p>
+          <h1>Космо-копилка</h1>
+          <p>Двигай ползунки и смотри, как деньги летят к цели.</p>
+        </div>
+
+        <div class="rocket-stage" aria-hidden="true">
+          <div class="planet planet-blue"></div>
+          <div class="planet planet-yellow"></div>
+          <div class="rocket">
+            <div class="rocket-window"></div>
+            <div class="rocket-fin left"></div>
+            <div class="rocket-fin right"></div>
+            <div class="rocket-fire"></div>
+          </div>
+          <div class="coin coin-one">₽</div>
+          <div class="coin coin-two">%</div>
+          <div class="coin coin-three">+</div>
+        </div>
+
+        <div class="balance-card">
+          <span>Сейчас в копилке</span>
+          <strong id="currentBalance">0 ₽</strong>
+          <small id="convertedBalance">0 $</small>
+        </div>
+      </section>
+
+      <section class="kid-grid">
+        <section class="panel big-control">
+          <div class="section-title">
+            <div>
+              <h2>Деньги сейчас</h2>
+              <p>Можно быстро поставить реальный баланс из копилки.</p>
+            </div>
+            <output id="balanceOutput">0 ₽</output>
+          </div>
+          <input id="balanceSlider" class="range-xl" type="range" min="0" max="100000" step="100" value="3000" />
+          <div class="quick-buttons" aria-label="Быстрые изменения баланса">
+            <button type="button" data-adjust="-500" class="chip">-500</button>
+            <button type="button" data-adjust="-100" class="chip">-100</button>
+            <button type="button" data-adjust="100" class="chip">+100</button>
+            <button type="button" data-adjust="500" class="chip">+500</button>
+            <button type="button" data-adjust="1000" class="chip">+1000</button>
+          </div>
+        </section>
+
+        <section class="panel goal-panel">
+          <div class="section-title">
+            <div>
+              <h2>Мои цели</h2>
+              <p>Выбери цель, а потом настрой её имя и сумму.</p>
+            </div>
+            <button id="addGoalButton" type="button" class="chip add-goal">+ цель</button>
+          </div>
+          <div id="goalList" class="goal-list"></div>
+          <div class="goal-meter">
+            <div class="progress-top">
+              <span id="goalLabel">Новая мечта</span>
+              <strong id="goalPercent">0%</strong>
+            </div>
+            <div class="progress-track">
+              <div id="goalBar" class="progress-fill"></div>
+            </div>
+            <p id="goalLeft">Осталось 20 000 ₽</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="layout">
+        <aside class="panel controls-panel">
+          <h2>Рычажки будущего</h2>
+
+          <label class="name-field">
+            <span>Название выбранной цели</span>
+            <input id="goalName" type="text" maxlength="40" value="Новая мечта" />
+          </label>
+
+          <label class="slider-field">
+            <span>Сумма выбранной цели</span>
+            <output id="goalAmountOutput">20 000 ₽</output>
+            <input id="goalAmount" type="range" min="1000" max="150000" step="1000" value="20000" />
+          </label>
+
+          <label class="slider-field">
+            <span>Ставка в год</span>
+            <output id="annualRateOutput">12%</output>
+            <input id="annualRate" type="range" min="0" max="30" step="0.5" value="12" />
+          </label>
+
+          <label class="slider-field">
+            <span>Пополнять каждый месяц</span>
+            <output id="monthlyTopUpOutput">500 ₽</output>
+            <input id="monthlyTopUp" type="range" min="0" max="10000" step="100" value="500" />
+          </label>
+
+          <label class="select-field">
+            <span>Валюта просмотра</span>
+            <select id="currency">
+              <option value="USD">$ доллар</option>
+              <option value="CNY">¥ юань</option>
+              <option value="EUR">€ евро</option>
+              <option value="CUSTOM">своя валюта</option>
+            </select>
+          </label>
+
+          <label class="slider-field">
+            <span>Курс: 1 валюта = ₽</span>
+            <output id="exchangeRateOutput">92 ₽</output>
+            <input id="exchangeRate" type="range" min="1" max="200" step="0.1" value="92" />
+          </label>
+        </aside>
+
+        <section class="main-column">
+          <section class="panel action-panel">
+            <div class="section-title">
+              <div>
+                <h2>Записать событие</h2>
+                <p>Сумма выбирается ползунком, потом можно добавить или потратить.</p>
+              </div>
+              <output id="transactionAmountOutput">500 ₽</output>
+            </div>
+
+            <form id="transactionForm" class="transaction-form">
+              <input id="transactionAmount" class="range-xl" type="range" min="100" max="20000" step="100" value="500" />
+              <label class="note-field">
+                <span>Подпись</span>
+                <input id="transactionNote" type="text" maxlength="60" placeholder="Например: подарок или покупка" />
+              </label>
+              <div class="button-row">
+                <button type="submit" value="deposit">Добавить</button>
+                <button type="submit" value="withdraw" class="secondary">Потратить</button>
+                <button type="button" id="interestButton" class="ghost">Проценты за месяц</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="scenario-grid" aria-label="Прогноз">
+            <article class="panel scenario-wide">
+              <div class="section-title">
+                <div>
+                  <h2>Что будет потом</h2>
+                  <p>Сложные проценты считаются каждый месяц.</p>
+                </div>
+              </div>
+              <div id="scenarioList" class="scenario-list"></div>
+            </article>
+
+            <article class="panel chart-panel">
+              <h2>Лестница на 10 лет</h2>
+              <div id="chart" class="chart" aria-hidden="true"></div>
+            </article>
+          </section>
+
+          <section class="panel history-panel">
+            <div class="history-title">
+              <h2>Дневник решений</h2>
+              <button id="resetButton" type="button" class="ghost danger">Начать заново</button>
+            </div>
+            <div id="historyList" class="history-list"></div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script>
+const storageKey = "family-capital-v2";
+const oldStorageKey = "family-capital-v1";
+
+const currencyMeta = {
+  USD: { symbol: "$", rate: 92 },
+  CNY: { symbol: "¥", rate: 12.7 },
+  EUR: { symbol: "€", rate: 100 },
+  CUSTOM: { symbol: "¤", rate: 1 },
+};
+
+const scenarioMonths = [
+  { label: "1 месяц", months: 1 },
+  { label: "6 месяцев", months: 6 },
+  { label: "1 год", months: 12 },
+  { label: "3 года", months: 36 },
+  { label: "5 лет", months: 60 },
+  { label: "10 лет", months: 120 },
+];
+
+const defaults = {
+  balance: 3000,
+  activeGoalId: "goal-1",
+  goals: [
+    {
+      id: "goal-1",
+      name: "Новая мечта",
+      amount: 20000,
+    },
+  ],
+  annualRate: 12,
+  currency: "USD",
+  exchangeRate: 92,
+  monthlyTopUp: 500,
+  transactions: [
+    {
+      id: crypto.randomUUID(),
+      type: "set",
+      amount: 3000,
+      note: "Старт в копилке",
+      date: new Date().toISOString(),
+    },
+  ],
+};
+
+let state = loadState();
+let balanceBeforeSlide = Number(state.balance) || 0;
+
+const elements = {
+  currentBalance: document.querySelector("#currentBalance"),
+  convertedBalance: document.querySelector("#convertedBalance"),
+  balanceSlider: document.querySelector("#balanceSlider"),
+  balanceOutput: document.querySelector("#balanceOutput"),
+  addGoalButton: document.querySelector("#addGoalButton"),
+  goalList: document.querySelector("#goalList"),
+  goalName: document.querySelector("#goalName"),
+  goalAmount: document.querySelector("#goalAmount"),
+  goalAmountOutput: document.querySelector("#goalAmountOutput"),
+  annualRate: document.querySelector("#annualRate"),
+  annualRateOutput: document.querySelector("#annualRateOutput"),
+  currency: document.querySelector("#currency"),
+  exchangeRate: document.querySelector("#exchangeRate"),
+  exchangeRateOutput: document.querySelector("#exchangeRateOutput"),
+  goalLabel: document.querySelector("#goalLabel"),
+  goalPercent: document.querySelector("#goalPercent"),
+  goalBar: document.querySelector("#goalBar"),
+  goalLeft: document.querySelector("#goalLeft"),
+  transactionForm: document.querySelector("#transactionForm"),
+  transactionAmount: document.querySelector("#transactionAmount"),
+  transactionAmountOutput: document.querySelector("#transactionAmountOutput"),
+  transactionNote: document.querySelector("#transactionNote"),
+  interestButton: document.querySelector("#interestButton"),
+  monthlyTopUp: document.querySelector("#monthlyTopUp"),
+  monthlyTopUpOutput: document.querySelector("#monthlyTopUpOutput"),
+  scenarioList: document.querySelector("#scenarioList"),
+  chart: document.querySelector("#chart"),
+  historyList: document.querySelector("#historyList"),
+  resetButton: document.querySelector("#resetButton"),
+};
+
+function loadState() {
+  const raw = localStorage.getItem(storageKey);
+  if (raw) return normalizeState(parseState(raw));
+
+  const oldRaw = localStorage.getItem(oldStorageKey);
+  if (!oldRaw) return structuredClone(defaults);
+
+  const oldState = parseState(oldRaw);
+  const migratedBalance = (oldState.transactions || []).reduce((sum, item) => {
+    if (item.type === "withdraw") return sum - Number(item.amount || 0);
+    return sum + Number(item.amount || 0);
+  }, 0);
+
+  return {
+    ...structuredClone(defaults),
+    ...oldState,
+    activeGoalId: "goal-1",
+    goals: [
+      {
+        id: "goal-1",
+        name: oldState.goalName || "Новая мечта",
+        amount: Number(oldState.goalAmount) || 20000,
+      },
+    ],
+    balance: Math.max(migratedBalance, 0),
+    transactions: [
+      {
+        id: crypto.randomUUID(),
+        type: "set",
+        amount: Math.max(migratedBalance, 0),
+        note: "Перенесено из старой версии",
+        date: new Date().toISOString(),
+      },
+      ...(oldState.transactions || []),
+    ],
+  };
+}
+
+function parseState(raw) {
+  try {
+    return { ...structuredClone(defaults), ...JSON.parse(raw) };
+  } catch {
+    return structuredClone(defaults);
+  }
+}
+
+function normalizeState(nextState) {
+  const fallbackGoal = {
+    id: "goal-1",
+    name: nextState.goalName || "Новая мечта",
+    amount: Number(nextState.goalAmount) || 20000,
+  };
+  const hasLegacyGoal = Boolean(nextState.goalName || nextState.goalAmount);
+  const hasOnlyDefaultGoal = Array.isArray(nextState.goals)
+    && nextState.goals.length === 1
+    && nextState.goals[0].id === "goal-1"
+    && nextState.goals[0].name === "Новая мечта"
+    && Number(nextState.goals[0].amount) === 20000;
+  const goals = Array.isArray(nextState.goals) && nextState.goals.length > 0
+    && !(hasLegacyGoal && hasOnlyDefaultGoal)
+    ? nextState.goals.map((goal, index) => ({
+        id: goal.id || `goal-${index + 1}`,
+        name: goal.name || "Новая мечта",
+        amount: Number(goal.amount) || 20000,
+      }))
+    : [fallbackGoal];
+
+  const activeGoalId = goals.some((goal) => goal.id === nextState.activeGoalId)
+    ? nextState.activeGoalId
+    : goals[0].id;
+
+  return { ...nextState, goals, activeGoalId };
+}
+
+function saveState() {
+  localStorage.setItem(storageKey, JSON.stringify(state));
+}
+
+function money(value, currency = "RUB") {
+  return new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: currency === "RUB" ? 0 : 2,
+  }).format(value || 0);
+}
+
+function shortMoney(value) {
+  return new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(value || 0) + " ₽";
+}
+
+function customMoney(value) {
+  const meta = currencyMeta[state.currency] || currencyMeta.CUSTOM;
+  return `${new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 2 }).format(value || 0)} ${meta.symbol}`;
+}
+
+function convertedMoney(rubles) {
+  return customMoney((Number(rubles) || 0) / Math.max(Number(state.exchangeRate), 0.01));
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(Number(value) || 0, min), max);
+}
+
+function projectedBalance(start, months) {
+  const monthlyRate = Math.max(Number(state.annualRate), 0) / 100 / 12;
+  const topUp = Math.max(Number(state.monthlyTopUp), 0);
+  let total = Math.max(start, 0);
+
+  for (let month = 0; month < months; month += 1) {
+    total = total * (1 + monthlyRate) + topUp;
+  }
+
+  return total;
+}
+
+function recordTransaction(type, amount, note) {
+  state.transactions.unshift({
+    id: crypto.randomUUID(),
+    type,
+    amount: Math.max(Number(amount), 0),
+    note: note || transactionLabel(type),
+    date: new Date().toISOString(),
+  });
+}
+
+function transactionLabel(type) {
+  if (type === "deposit") return "Добавил в копилку";
+  if (type === "withdraw") return "Потратил";
+  if (type === "set") return "Поставил баланс";
+  return "Проценты";
+}
+
+function activeGoal() {
+  return state.goals.find((goal) => goal.id === state.activeGoalId) || state.goals[0];
+}
+
+function createGoal() {
+  const id = crypto.randomUUID();
+  state.goals.push({
+    id,
+    name: `Цель ${state.goals.length + 1}`,
+    amount: 10000,
+  });
+  state.activeGoalId = id;
+  saveState();
+  render();
+}
+
+function deleteGoal(id) {
+  if (state.goals.length === 1) return;
+  state.goals = state.goals.filter((goal) => goal.id !== id);
+  if (state.activeGoalId === id) {
+    state.activeGoalId = state.goals[0].id;
+  }
+  saveState();
+  render();
+}
+
+function setBalance(value, shouldRecord = false) {
+  const next = clamp(value, 0, 100000);
+  const previous = Number(state.balance) || 0;
+  state.balance = next;
+
+  if (shouldRecord && next !== previous) {
+    recordTransaction(next > previous ? "deposit" : "withdraw", Math.abs(next - previous), next > previous ? "Баланс увеличен" : "Баланс уменьшен");
+  }
+
+  saveState();
+  render();
+}
+
+function applySliderValues() {
+  const goal = activeGoal();
+  goal.name = elements.goalName.value.trim() || "Новая мечта";
+  goal.amount = clamp(elements.goalAmount.value, 1000, 150000);
+  state.annualRate = clamp(elements.annualRate.value, 0, 30);
+  state.currency = elements.currency.value;
+  state.exchangeRate = clamp(elements.exchangeRate.value, 1, 200);
+  state.monthlyTopUp = clamp(elements.monthlyTopUp.value, 0, 10000);
+  saveState();
+  render();
+}
+
+function syncInputs() {
+  const goal = activeGoal();
+  elements.balanceSlider.value = state.balance;
+  elements.balanceOutput.textContent = shortMoney(state.balance);
+  elements.goalName.value = goal.name;
+  elements.goalAmount.value = goal.amount;
+  elements.goalAmountOutput.textContent = shortMoney(goal.amount);
+  elements.annualRate.value = state.annualRate;
+  elements.annualRateOutput.textContent = `${Number(state.annualRate).toLocaleString("ru-RU")}%`;
+  elements.currency.value = state.currency;
+  elements.exchangeRate.value = state.exchangeRate;
+  elements.exchangeRateOutput.textContent = `${Number(state.exchangeRate).toLocaleString("ru-RU")} ₽`;
+  elements.monthlyTopUp.value = state.monthlyTopUp;
+  elements.monthlyTopUpOutput.textContent = shortMoney(state.monthlyTopUp);
+  elements.transactionAmountOutput.textContent = shortMoney(elements.transactionAmount.value);
+}
+
+function renderSummary(total) {
+  const goal = activeGoal();
+  const goalAmount = Math.max(Number(goal.amount), 0);
+  const percent = goalAmount > 0 ? Math.min((total / goalAmount) * 100, 100) : 100;
+  const left = Math.max(goalAmount - total, 0);
+
+  elements.currentBalance.textContent = money(total);
+  elements.convertedBalance.textContent = convertedMoney(total);
+  elements.goalLabel.textContent = goal.name;
+  elements.goalPercent.textContent = `${Math.round(percent)}%`;
+  elements.goalBar.style.width = `${percent}%`;
+  elements.goalLeft.innerHTML = left > 0
+    ? `Осталось ${money(left)} <span>${convertedMoney(left)}</span>`
+    : `Цель достигнута <span>${convertedMoney(total)}</span>`;
+}
+
+function renderGoals(total) {
+  elements.goalList.innerHTML = "";
+
+  state.goals.forEach((goal) => {
+    const percent = goal.amount > 0 ? Math.min((total / goal.amount) * 100, 100) : 100;
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = `goal-card${goal.id === state.activeGoalId ? " active" : ""}`;
+    card.dataset.goalId = goal.id;
+    card.innerHTML = `
+      <span>${goal.name}</span>
+      <strong>${shortMoney(goal.amount)}</strong>
+      <i style="width: ${percent}%"></i>
+    `;
+    card.addEventListener("click", () => {
+      state.activeGoalId = goal.id;
+      saveState();
+      render();
+    });
+    elements.goalList.append(card);
+
+    if (state.goals.length > 1 && goal.id === state.activeGoalId) {
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "goal-remove";
+      remove.textContent = "убрать выбранную";
+      remove.addEventListener("click", () => deleteGoal(goal.id));
+      elements.goalList.append(remove);
+    }
+  });
+}
+
+function renderScenarios(total) {
+  elements.scenarioList.innerHTML = "";
+
+  scenarioMonths.forEach((scenario) => {
+    const projected = projectedBalance(total, scenario.months);
+    const topUps = Math.max(Number(state.monthlyTopUp), 0) * scenario.months;
+    const earned = projected - total - topUps;
+    const card = document.createElement("div");
+    card.className = "scenario-card";
+    card.innerHTML = `
+      <span>${scenario.label}</span>
+      <strong>${money(projected)}</strong>
+      <em>${convertedMoney(projected)}</em>
+      <small>деньги заработали ${money(Math.max(earned, 0))}</small>
+    `;
+    elements.scenarioList.append(card);
+  });
+}
+
+function renderChart(total) {
+  elements.chart.innerHTML = "";
+  const years = Array.from({ length: 10 }, (_, index) => ({
+    label: index + 1,
+    value: projectedBalance(total, (index + 1) * 12),
+  }));
+  const max = Math.max(...years.map((year) => year.value), 1);
+
+  years.forEach((year) => {
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    bar.style.height = `${Math.max((year.value / max) * 100, 4)}%`;
+    bar.title = `${year.label} год: ${money(year.value)}`;
+    bar.innerHTML = `<span>${year.label}</span>`;
+    elements.chart.append(bar);
+  });
+}
+
+function renderHistory() {
+  elements.historyList.innerHTML = "";
+
+  if (state.transactions.length === 0) {
+    elements.historyList.innerHTML = `<div class="empty">Дневник пока пустой</div>`;
+    return;
+  }
+
+  state.transactions.slice(0, 12).forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "history-item";
+    const date = new Intl.DateTimeFormat("ru-RU", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(item.date));
+    const sign = item.type === "withdraw" ? "-" : "+";
+    row.innerHTML = `
+      <span>${date}</span>
+      <span>${item.note}</span>
+      <strong class="${item.type}">${sign}${money(item.amount)}</strong>
+    `;
+    elements.historyList.append(row);
+  });
+}
+
+function render() {
+  syncInputs();
+  const total = Math.max(Number(state.balance), 0);
+  renderGoals(total);
+  renderSummary(total);
+  renderScenarios(total);
+  renderChart(total);
+  renderHistory();
+}
+
+elements.balanceSlider.addEventListener("pointerdown", () => {
+  balanceBeforeSlide = Number(state.balance) || 0;
+});
+
+elements.balanceSlider.addEventListener("focus", () => {
+  balanceBeforeSlide = Number(state.balance) || 0;
+});
+
+elements.balanceSlider.addEventListener("input", () => setBalance(elements.balanceSlider.value));
+
+elements.balanceSlider.addEventListener("change", () => {
+  const next = Number(elements.balanceSlider.value) || 0;
+  if (next !== balanceBeforeSlide) {
+    recordTransaction(next > balanceBeforeSlide ? "deposit" : "withdraw", Math.abs(next - balanceBeforeSlide), next > balanceBeforeSlide ? "Баланс увеличен" : "Баланс уменьшен");
+    saveState();
+    render();
+  }
+});
+
+document.querySelectorAll(".quick-buttons button").forEach((button) => {
+  button.addEventListener("click", () => {
+    setBalance((Number(state.balance) || 0) + Number(button.dataset.adjust), true);
+  });
+});
+
+elements.addGoalButton.addEventListener("click", createGoal);
+
+[elements.goalAmount, elements.annualRate, elements.exchangeRate, elements.monthlyTopUp].forEach((control) => {
+  control.addEventListener("input", applySliderValues);
+});
+
+elements.goalName.addEventListener("input", applySliderValues);
+
+elements.currency.addEventListener("change", () => {
+  const meta = currencyMeta[elements.currency.value] || currencyMeta.CUSTOM;
+  elements.exchangeRate.value = meta.rate;
+  applySliderValues();
+});
+
+elements.transactionAmount.addEventListener("input", () => {
+  elements.transactionAmountOutput.textContent = shortMoney(elements.transactionAmount.value);
+});
+
+elements.transactionForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const action = event.submitter?.value || "deposit";
+  const amount = Math.max(Number(elements.transactionAmount.value), 0);
+  if (!amount) return;
+
+  if (action === "withdraw") {
+    state.balance = Math.max((Number(state.balance) || 0) - amount, 0);
+  } else {
+    state.balance = Math.min((Number(state.balance) || 0) + amount, 100000);
+  }
+
+  recordTransaction(action, amount, elements.transactionNote.value.trim());
+  elements.transactionNote.value = "";
+  saveState();
+  render();
+});
+
+elements.interestButton.addEventListener("click", () => {
+  const total = Math.max(Number(state.balance), 0);
+  const monthlyRate = Math.max(Number(state.annualRate), 0) / 100 / 12;
+  const interest = Math.round(total * monthlyRate);
+  if (interest > 0) {
+    state.balance = Math.min(total + interest, 100000);
+    recordTransaction("interest", interest, "Проценты за месяц");
+    saveState();
+    render();
+  }
+});
+
+elements.resetButton.addEventListener("click", () => {
+  state = { ...structuredClone(defaults), transactions: [] };
+  saveState();
+  render();
+});
+
+saveState();
+render();
+    </script>
+  </body>
+</html>

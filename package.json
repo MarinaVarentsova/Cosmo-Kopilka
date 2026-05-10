@@ -1,0 +1,12 @@
+{
+  "name": "cosmo-kopilka",
+  "version": "1.0.0",
+  "description": "Космо-копилка — семейная копилка с космической тематикой",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.1"
+  }
+}
