@@ -1211,12 +1211,10 @@ const elements = {
   planetFill: document.querySelector("#planetFill"),
   levelBadge: document.querySelector("#levelBadge"),
   interestCountBadge: document.querySelector("#interestCountBadge"),
-  resetButtonAction: document.querySelector("#resetButtonAction"),
   transactionForm: document.querySelector("#transactionForm"),
   transactionAmount: document.querySelector("#transactionAmount"),
   transactionAmountOutput: document.querySelector("#transactionAmountOutput"),
   transactionNote: document.querySelector("#transactionNote"),
-  interestButton: document.querySelector("#interestButton"),
   monthlyTopUp: document.querySelector("#monthlyTopUp"),
   monthlyTopUpOutput: document.querySelector("#monthlyTopUpOutput"),
   scenarioList: document.querySelector("#scenarioList"),
@@ -1817,12 +1815,6 @@ async function loadRates() {
 }
 
 
-document.querySelectorAll(".sim-btn").forEach((button) => {
-  button.addEventListener("click", () => {
-    simulateMonths(Number(button.dataset.months));
-  });
-});
-
 elements.addGoalButton.addEventListener("click", createGoal);
 
 [elements.goalAmount, elements.annualRate, elements.monthlyTopUp, elements.goalPeriod].forEach((control) => {
@@ -1861,18 +1853,6 @@ elements.transactionForm.addEventListener("submit", (event) => {
   render();
 });
 
-elements.interestButton.addEventListener("click", () => {
-  const total = Math.max(Number(state.balance), 0);
-  const monthlyRate = Math.max(Number(state.annualRate), 0) / 100 / 12;
-  const interest = Math.round(total * monthlyRate);
-  if (interest > 0) {
-    state.balance = total + interest;
-    state.interestCount = (Number(state.interestCount) || 0) + 1;
-    recordTransaction("interest", interest, "Проценты за месяц");
-    saveState();
-    render();
-  }
-});
 
 function doReset() {
   state = { ...structuredClone(defaults), transactions: [] };
@@ -1881,7 +1861,6 @@ function doReset() {
 }
 
 elements.resetButton.addEventListener("click", doReset);
-elements.resetButtonAction.addEventListener("click", doReset);
 
 makeOutputEditable(elements.balanceOutput, (val) => setBalance(val, true), { min: 0, step: 100 });
 
