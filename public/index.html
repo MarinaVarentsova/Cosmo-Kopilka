@@ -633,29 +633,34 @@ button.danger {
   border-color: var(--danger);
 }
 
+.hero-copy {
+  position: relative;
+}
+
 .demo-link {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 20px;
-  width: 62px;
-  height: 62px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   background: linear-gradient(145deg, #1a2560, #2f3f88);
   border: 3px solid rgba(35,185,154,0.45);
-  box-shadow: 0 6px 0 rgba(26,37,96,0.5), 0 0 18px rgba(35,185,154,0.2);
+  box-shadow: 0 6px 0 rgba(26,37,96,0.45), 0 0 18px rgba(35,185,154,0.2);
   text-decoration: none;
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1;
   cursor: pointer;
   animation: demo-bob 3s ease-in-out infinite;
   transition: box-shadow 120ms, border-color 120ms;
-  position: relative;
 }
 .demo-link::after {
   content: 'Демо';
   position: absolute;
-  bottom: -22px;
+  bottom: -20px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 10px;
@@ -666,7 +671,7 @@ button.danger {
   white-space: nowrap;
 }
 .demo-link:hover {
-  border-color: rgba(35,185,154,0.8);
+  border-color: rgba(35,185,154,0.85);
   box-shadow: 0 8px 0 rgba(26,37,96,0.5), 0 0 28px rgba(35,185,154,0.35);
 }
 .demo-link:active {
@@ -1261,6 +1266,7 @@ button:focus {
           <p class="eyebrow">Мой семейный вклад</p>
           <h1>Космо-копилка</h1>
           <p>Смотри, как деньги летят к цели.</p>
+          <a href="/video.html" class="demo-link" title="Смотреть демо">🚀</a>
         </div>
 
         <div class="rocket-stage" aria-hidden="true">
@@ -1409,7 +1415,6 @@ button:focus {
             </div>
           </form>
 
-          <a href="/video.html" class="demo-link" title="Смотреть демо">🚀</a>
         </aside>
 
         <!-- col 2 row 2: main-column -->
