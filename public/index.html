@@ -394,6 +394,8 @@ p {
 
 .year-table-wrap {
   overflow-x: auto;
+  border-radius: 14px;
+  border: 2px solid var(--border);
 }
 
 .year-table {
@@ -402,42 +404,80 @@ p {
   font-size: 14px;
 }
 
+.year-table thead tr {
+  background: linear-gradient(90deg, #eef2ff 0%, #f0fff8 100%);
+}
+
 .year-table th {
   text-align: right;
   font-size: 12px;
   font-weight: 900;
   color: var(--muted);
-  padding: 0 10px 10px;
+  padding: 11px 14px;
   border-bottom: 2px solid var(--border);
   white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 .year-table th:first-child {
   text-align: left;
+  border-radius: 12px 0 0 0;
+}
+
+.year-table th:last-child {
+  border-radius: 0 12px 0 0;
+}
+
+.year-table tbody tr:nth-child(even) {
+  background: #fafbff;
+}
+
+.year-table tbody tr:nth-child(odd) {
+  background: #fff;
+}
+
+.year-table tbody tr:hover {
+  background: #f0fff8;
+  transition: background 0.15s;
 }
 
 .year-table td {
-  padding: 8px 10px;
+  padding: 9px 14px;
   text-align: right;
   border-bottom: 1px solid var(--border);
   font-weight: 700;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .year-table td:first-child {
   text-align: left;
   color: var(--muted);
   font-weight: 900;
+  font-size: 13px;
 }
 
-.year-table tr:last-child td {
+.year-table tr.row-total td {
   border-bottom: none;
-  background: #f3f4ff;
+  border-top: 2px solid var(--border);
+  background: linear-gradient(90deg, #eef2ff 0%, #f0fff8 100%);
   font-weight: 900;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.year-table tr.row-total td:first-child {
+  color: var(--space);
 }
 
 .year-table .cell-interest {
   color: var(--leaf);
+  font-weight: 900;
+}
+
+.year-table .cell-end {
+  color: var(--space);
+  font-weight: 900;
 }
 
 output {
@@ -1191,7 +1231,7 @@ button:focus {
           <section class="panel year-table-panel">
             <div class="section-title" style="margin-bottom:16px">
               <div>
-                <h2>Как именно работают</h2>
+                <h2>Как работают деньги</h2>
                 <p>Помесячный расчёт на 1 год с учётом ставки и взносов.</p>
               </div>
             </div>
@@ -1873,20 +1913,32 @@ function renderYearTable() {
                   "7 мес.","8 мес.","9 мес.","10 мес.","11 мес.","1 год"];
   let cur = balance;
   let rows = "";
+  let totalInterest = 0;
+  let totalTopUp = 0;
+  const rateStr = annualRate > 0 ? `${(monthlyRate * 100).toFixed(2)}%` : "0%";
   for (let i = 0; i < 12; i++) {
     const start = Math.round(cur);
     const interest = Math.round(cur * monthlyRate);
+    totalInterest += interest;
+    totalTopUp += topUp;
     cur = cur + interest + topUp;
     const end = Math.round(cur);
-    const rateStr = annualRate > 0 ? `${(monthlyRate * 100).toFixed(2)}%` : "0%";
     rows += `<tr>
       <td>${labels[i]}</td>
       <td>${start.toLocaleString("ru-RU")} ₽</td>
       <td>${rateStr}</td>
-      <td class="cell-interest">${interest.toLocaleString("ru-RU")} ₽</td>
-      <td>${end.toLocaleString("ru-RU")} ₽</td>
+      <td class="cell-interest">+${interest.toLocaleString("ru-RU")} ₽</td>
+      <td class="cell-end">${end.toLocaleString("ru-RU")} ₽</td>
     </tr>`;
   }
+  const finalEnd = Math.round(cur);
+  rows += `<tr class="row-total">
+    <td>Итого</td>
+    <td>${balance.toLocaleString("ru-RU")} ₽ → ${finalEnd.toLocaleString("ru-RU")} ₽</td>
+    <td>—</td>
+    <td class="cell-interest">+${totalInterest.toLocaleString("ru-RU")} ₽</td>
+    <td class="cell-end">${finalEnd.toLocaleString("ru-RU")} ₽</td>
+  </tr>`;
   tbody.innerHTML = rows;
 }
 
