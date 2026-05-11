@@ -1210,7 +1210,6 @@ const elements = {
   goalWhen: document.querySelector("#goalWhen"),
   planetFill: document.querySelector("#planetFill"),
   levelBadge: document.querySelector("#levelBadge"),
-  interestCountBadge: document.querySelector("#interestCountBadge"),
   transactionForm: document.querySelector("#transactionForm"),
   transactionAmount: document.querySelector("#transactionAmount"),
   transactionAmountOutput: document.querySelector("#transactionAmountOutput"),
@@ -1783,9 +1782,6 @@ function render() {
   renderScenarios(total);
   renderChart(total);
   renderHistory();
-  const count = Number(state.interestCount) || 0;
-  elements.interestCountBadge.textContent = count;
-  elements.interestCountBadge.style.display = count > 0 ? "inline-flex" : "none";
 }
 
 async function loadRates() {
