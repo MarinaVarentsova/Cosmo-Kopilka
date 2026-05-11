@@ -634,29 +634,31 @@ button.danger {
 }
 
 .demo-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 14px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  background: #1a2560;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 13px 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1a2560, #2f3f88);
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 900;
   text-decoration: none;
   border: 2px solid rgba(35,185,154,0.4);
-  box-shadow: 0 4px 0 rgba(26,37,96,0.35);
-  transition: background 120ms, box-shadow 120ms, transform 80ms;
-  width: fit-content;
+  box-shadow: 0 6px 0 rgba(26,37,96,0.5);
+  transition: background 120ms, box-shadow 80ms, transform 80ms;
+  width: 100%;
+  letter-spacing: 0.02em;
 }
 .demo-link:hover {
-  background: #2f3f88;
-  box-shadow: 0 6px 0 rgba(26,37,96,0.35);
+  background: linear-gradient(135deg, #2f3f88, #4155aa);
+  border-color: rgba(35,185,154,0.65);
 }
 .demo-link:active {
-  transform: translateY(2px);
-  box-shadow: 0 2px 0 rgba(26,37,96,0.35);
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 rgba(26,37,96,0.5);
 }
 
 button.sim-btn {
@@ -1241,7 +1243,6 @@ button:focus {
           <p class="eyebrow">Мой семейный вклад</p>
           <h1>Космо-копилка</h1>
           <p>Смотри, как деньги летят к цели.</p>
-          <a href="/video.html" class="demo-link">▶ Смотреть демо</a>
         </div>
 
         <div class="rocket-stage" aria-hidden="true">
@@ -1390,6 +1391,7 @@ button:focus {
             </div>
           </form>
 
+          <a href="/video.html" class="demo-link">▶ Смотреть демо</a>
         </aside>
 
         <!-- col 2 row 2: main-column -->
