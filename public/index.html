@@ -278,6 +278,45 @@ p {
   width: fit-content;
 }
 
+/* ── Чипы периода ── */
+.period-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.period-chip {
+  background: rgba(255,255,255,0.55);
+  border: 2px solid rgba(35,48,71,0.14);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 120ms, border-color 120ms, color 120ms;
+}
+
+.period-chip:hover {
+  background: #fff1bd;
+  border-color: #ffe566;
+  color: var(--ink);
+}
+
+.period-chip.active {
+  background: #fff1bd;
+  border-color: #ffd700;
+  color: var(--ink);
+}
+
+.period-result {
+  margin-top: 7px;
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--leaf);
+}
+
 /* ── Ракета на прогресс-баре ── */
 .progress-wrap {
   position: relative;
@@ -1109,6 +1148,12 @@ button:focus {
           <strong id="currentBalance">0 ₽</strong>
           <small id="convertedBalance">0 $</small>
           <span id="levelBadge" class="level-badge">🌱 Новичок</span>
+          <div class="period-chips" id="balancePeriodChips">
+            <button class="period-chip" data-months="1">1 мес.</button>
+            <button class="period-chip" data-months="6">6 мес.</button>
+            <button class="period-chip" data-months="12">1 год</button>
+          </div>
+          <p id="balancePeriodResult" class="period-result" hidden></p>
         </div>
       </section>
 
@@ -1170,6 +1215,12 @@ button:focus {
             </div>
             <p id="goalLeft">Осталось 20 000 ₽</p>
             <p id="goalWhen"></p>
+            <div class="period-chips" id="goalPeriodChips">
+              <button class="period-chip" data-months="1">1 мес.</button>
+              <button class="period-chip" data-months="6">6 мес.</button>
+              <button class="period-chip" data-months="12">1 год</button>
+            </div>
+            <p id="goalPeriodResult" class="period-result" hidden></p>
           </div>
         </section>
 
@@ -1967,6 +2018,83 @@ function renderYearTable() {
   tbody.innerHTML = rows;
 }
 
+function projectBalance(balance, months) {
+  const rate = Math.max(Number(state.annualRate), 0) / 100 / 12;
+  const topUp = Math.max(Number(state.monthlyTopUp), 0);
+  let cur = balance;
+  for (let i = 0; i < months; i++) {
+    cur = cur + Math.round(cur * rate) + topUp;
+  }
+  return Math.round(cur);
+}
+
+let activePeriodBalance = null;
+let activePeriodGoal = null;
+
+function setupPeriodChips() {
+  const balanceChips = document.querySelectorAll("#balancePeriodChips .period-chip");
+  const balanceResult = document.querySelector("#balancePeriodResult");
+  const goalChips = document.querySelectorAll("#goalPeriodChips .period-chip");
+  const goalResult = document.querySelector("#goalPeriodResult");
+
+  balanceChips.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const months = Number(btn.dataset.months);
+      const isActive = btn.classList.contains("active");
+      balanceChips.forEach(b => b.classList.remove("active"));
+      if (isActive) {
+        balanceResult.hidden = true;
+        activePeriodBalance = null;
+      } else {
+        btn.classList.add("active");
+        activePeriodBalance = months;
+        const total = Math.max(Number(state.balance), 0);
+        const projected = projectBalance(total, months);
+        balanceResult.hidden = false;
+        balanceResult.textContent = `→ через ${btn.textContent}: ${money(projected)}`;
+      }
+    });
+  });
+
+  goalChips.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const months = Number(btn.dataset.months);
+      const isActive = btn.classList.contains("active");
+      goalChips.forEach(b => b.classList.remove("active"));
+      if (isActive) {
+        goalResult.hidden = true;
+        activePeriodGoal = null;
+      } else {
+        btn.classList.add("active");
+        activePeriodGoal = months;
+        const total = Math.max(Number(state.balance), 0);
+        const goal = activeGoal();
+        const projected = projectBalance(total, months);
+        const pct = goal.amount > 0 ? Math.min(Math.round((projected / goal.amount) * 100), 100) : 100;
+        goalResult.hidden = false;
+        goalResult.textContent = `→ через ${btn.textContent}: ${money(projected)} (${pct}% цели)`;
+      }
+    });
+  });
+}
+
+function refreshPeriodResults(total) {
+  const balanceResult = document.querySelector("#balancePeriodResult");
+  const goalResult = document.querySelector("#goalPeriodResult");
+  if (activePeriodBalance !== null && balanceResult && !balanceResult.hidden) {
+    const projected = projectBalance(total, activePeriodBalance);
+    const label = `${activePeriodBalance === 12 ? "1 год" : activePeriodBalance + " мес."}`;
+    balanceResult.textContent = `→ через ${label}: ${money(projected)}`;
+  }
+  if (activePeriodGoal !== null && goalResult && !goalResult.hidden) {
+    const goal = activeGoal();
+    const projected = projectBalance(total, activePeriodGoal);
+    const pct = goal.amount > 0 ? Math.min(Math.round((projected / goal.amount) * 100), 100) : 100;
+    const label = `${activePeriodGoal === 12 ? "1 год" : activePeriodGoal + " мес."}`;
+    goalResult.textContent = `→ через ${label}: ${money(projected)} (${pct}% цели)`;
+  }
+}
+
 function render() {
   syncInputs();
   const total = Math.max(Number(state.balance), 0);
@@ -1977,6 +2105,7 @@ function render() {
   renderChart(total);
   renderYearTable();
   renderHistory();
+  refreshPeriodResults(total);
 }
 
 async function loadRates() {
@@ -2083,6 +2212,7 @@ makeOutputEditable(elements.transactionAmountOutput, (val) => {
   elements.transactionAmountOutput.textContent = shortMoney(clamped);
 }, { min: 100, step: 100 });
 
+setupPeriodChips();
 saveState();
 render();
 loadRates();
