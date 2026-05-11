@@ -633,6 +633,32 @@ button.danger {
   border-color: var(--danger);
 }
 
+.demo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: #1a2560;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+  border: 2px solid rgba(35,185,154,0.4);
+  box-shadow: 0 4px 0 rgba(26,37,96,0.35);
+  transition: background 120ms, box-shadow 120ms, transform 80ms;
+  width: fit-content;
+}
+.demo-link:hover {
+  background: #2f3f88;
+  box-shadow: 0 6px 0 rgba(26,37,96,0.35);
+}
+.demo-link:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(26,37,96,0.35);
+}
+
 button.sim-btn {
   background: var(--grape);
   color: white;
@@ -1215,6 +1241,7 @@ button:focus {
           <p class="eyebrow">Мой семейный вклад</p>
           <h1>Космо-копилка</h1>
           <p>Смотри, как деньги летят к цели.</p>
+          <a href="/video.html" class="demo-link">▶ Смотреть демо</a>
         </div>
 
         <div class="rocket-stage" aria-hidden="true">
@@ -2192,7 +2219,6 @@ function render() {
   renderYearTable();
   renderHistory();
   refreshPeriodResults(total);
-  renderMiniStats();
 }
 
 async function loadRates() {

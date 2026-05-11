@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 230 57% 24%; /* #1a2560 */
+    --foreground: 0 0% 100%;
+    
+    --primary: 167 68% 43%; /* #23b99a */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 42 100% 65%; /* #ffcc4d */
+    --secondary-foreground: 230 57% 24%;
+    
+    --accent: 359 100% 71%; /* #ff6b6b */
+    --accent-foreground: 0 0% 100%;
+
+    --font-display: 'Nunito', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body overflow-hidden;
+    background-color: hsl(var(--background));
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
