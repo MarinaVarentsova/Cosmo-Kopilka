@@ -443,8 +443,47 @@ button:focus {
   font-size: 11px;
   color: var(--leaf);
   font-weight: 900;
-  margin-top: 4px;
   display: block;
+}
+
+.rate-display {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: -8px;
+  margin-bottom: 16px;
+}
+
+.rate-value {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.goal-insight {
+  margin-bottom: 16px;
+  display: grid;
+  gap: 8px;
+}
+
+.insight-card {
+  background: #f0fff8;
+  border: 2px solid rgba(35, 185, 154, 0.25);
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.insight-card strong {
+  color: var(--leaf);
+  font-size: 15px;
+}
+
+.insight-card.warn {
+  background: #fff8ec;
+  border-color: rgba(255, 155, 28, 0.3);
 }
 
 .goal-meter {
@@ -863,7 +902,7 @@ button:focus {
             <output id="annualRateOutput">12%</output>
             <input id="annualRate" type="range" min="0" max="50" step="0.5" value="12" />
           </label>
-          <p class="edu-tip">Каждый месяц к балансу прибавляется ставка ÷ 12. В следующем месяце проценты считаются уже с учётом предыдущих — вот в чём сила сложного процента.</p>
+          <p class="edu-tip">Каждый месяц к балансу прибавляется ставка 12% годовых. В следующем месяце проценты считаются уже с суммы вложения + начисленных % — вот в чём сила сложного процента.</p>
 
           <label class="slider-field">
             <span>Пополнять каждый месяц</span>
@@ -871,22 +910,26 @@ button:focus {
             <input id="monthlyTopUp" type="range" min="0" max="50000" step="100" value="500" />
           </label>
 
+          <label class="slider-field">
+            <span>Срок мечты</span>
+            <output id="goalPeriodOutput">не задан</output>
+            <input id="goalPeriod" type="range" min="0" max="120" step="1" value="0" />
+          </label>
+
+          <div id="goalInsight" class="goal-insight"></div>
+
           <label class="select-field">
             <span>Валюта просмотра</span>
             <select id="currency">
               <option value="USD">$ доллар</option>
               <option value="CNY">¥ юань</option>
               <option value="EUR">€ евро</option>
-              <option value="CUSTOM">своя валюта</option>
             </select>
           </label>
-
-          <label class="slider-field">
-            <span>Курс: 1 валюта = ₽</span>
-            <output id="exchangeRateOutput">92 ₽</output>
-            <input id="exchangeRate" type="range" min="1" max="500" step="0.1" value="92" />
-          </label>
-          <span id="ratesStatus" class="rates-status"></span>
+          <div class="rate-display">
+            <span id="rateValue" class="rate-value"></span>
+            <span id="ratesStatus" class="rates-status"></span>
+          </div>
         </aside>
 
         <section class="main-column">
@@ -900,7 +943,7 @@ button:focus {
             </div>
 
             <form id="transactionForm" class="transaction-form">
-              <input id="transactionAmount" class="range-xl" type="range" min="100" max="500000" step="100" value="500" />
+              <input id="transactionAmount" type="range" min="100" max="500000" step="100" value="500" />
               <label class="note-field">
                 <span>Подпись</span>
                 <input id="transactionNote" type="text" maxlength="60" placeholder="Например: подарок или покупка" />
@@ -965,7 +1008,6 @@ const currencyMeta = {
   USD: { symbol: "$", rate: 92 },
   CNY: { symbol: "¥", rate: 12.7 },
   EUR: { symbol: "€", rate: 100 },
-  CUSTOM: { symbol: "¤", rate: 1 },
 };
 
 const scenarioMonths = [
@@ -991,6 +1033,7 @@ const defaults = {
   currency: "USD",
   exchangeRate: 92,
   monthlyTopUp: 500,
+  goalPeriodMonths: 0,
   transactions: [
     {
       id: crypto.randomUUID(),
@@ -1018,9 +1061,11 @@ const elements = {
   annualRate: document.querySelector("#annualRate"),
   annualRateOutput: document.querySelector("#annualRateOutput"),
   currency: document.querySelector("#currency"),
-  exchangeRate: document.querySelector("#exchangeRate"),
-  exchangeRateOutput: document.querySelector("#exchangeRateOutput"),
   ratesStatus: document.querySelector("#ratesStatus"),
+  rateValue: document.querySelector("#rateValue"),
+  goalPeriod: document.querySelector("#goalPeriod"),
+  goalPeriodOutput: document.querySelector("#goalPeriodOutput"),
+  goalInsight: document.querySelector("#goalInsight"),
   goalLabel: document.querySelector("#goalLabel"),
   goalPercent: document.querySelector("#goalPercent"),
   goalBar: document.querySelector("#goalBar"),
@@ -1257,10 +1302,90 @@ function applySliderValues() {
   goal.amount = clamp(elements.goalAmount.value, 1000, 5000000);
   state.annualRate = clamp(elements.annualRate.value, 0, 100);
   state.currency = elements.currency.value;
-  state.exchangeRate = clamp(elements.exchangeRate.value, 1, 10000);
   state.monthlyTopUp = clamp(elements.monthlyTopUp.value, 0, 1000000);
+  state.goalPeriodMonths = clamp(elements.goalPeriod.value, 0, 120);
   saveState();
   render();
+}
+
+function monthsToGoal(balance, goalAmount, annualRate, monthlyTopUp) {
+  if (balance >= goalAmount) return 0;
+  const r = annualRate / 100 / 12;
+  if (r === 0) {
+    if (monthlyTopUp <= 0) return Infinity;
+    return Math.ceil((goalAmount - balance) / monthlyTopUp);
+  }
+  if (monthlyTopUp <= 0) {
+    return Math.ceil(Math.log(goalAmount / balance) / Math.log(1 + r));
+  }
+  const a = goalAmount + monthlyTopUp / r;
+  const b = balance + monthlyTopUp / r;
+  if (b <= 0 || a / b <= 0) return Infinity;
+  return Math.ceil(Math.log(a / b) / Math.log(1 + r));
+}
+
+function requiredMonthlyContrib(balance, goalAmount, annualRate, months) {
+  if (months <= 0) return 0;
+  const r = annualRate / 100 / 12;
+  const fvBalance = balance * Math.pow(1 + r, months);
+  if (fvBalance >= goalAmount) return 0;
+  if (r === 0) return (goalAmount - fvBalance) / months;
+  return (goalAmount - fvBalance) * r / (Math.pow(1 + r, months) - 1);
+}
+
+function formatPeriod(months) {
+  if (months <= 0) return "уже достигнута";
+  const years = Math.floor(months / 12);
+  const mo = months % 12;
+  const parts = [];
+  if (years > 0) parts.push(`${years} ${years === 1 ? "год" : years < 5 ? "года" : "лет"}`);
+  if (mo > 0) parts.push(`${mo} мес.`);
+  return parts.join(" ");
+}
+
+function renderGoalInsight(balance) {
+  if (!elements.goalInsight) return;
+  elements.goalInsight.innerHTML = "";
+
+  const goal = activeGoal();
+  const goalAmount = Math.max(Number(goal.amount), 0);
+  const topUp = Math.max(Number(state.monthlyTopUp), 0);
+  const rate = Math.max(Number(state.annualRate), 0);
+  const period = Number(state.goalPeriodMonths) || 0;
+
+  if (goalAmount <= 0 || balance >= goalAmount) return;
+
+  if (topUp > 0) {
+    const n = monthsToGoal(balance, goalAmount, rate, topUp);
+    const card = document.createElement("div");
+    card.className = "insight-card";
+    if (!isFinite(n)) {
+      card.classList.add("warn");
+      card.innerHTML = `При взносе ${shortMoney(topUp)}/мес цель не достижима — слишком маленький взнос.`;
+    } else {
+      card.innerHTML = `При взносе <strong>${shortMoney(topUp)}/мес</strong><br>накопишь за <strong>${formatPeriod(n)}</strong>`;
+    }
+    elements.goalInsight.append(card);
+  }
+
+  if (period > 0) {
+    const needed = requiredMonthlyContrib(balance, goalAmount, rate, period);
+    const card2 = document.createElement("div");
+    card2.className = "insight-card";
+    if (needed <= 0) {
+      card2.innerHTML = `За <strong>${formatPeriod(period)}</strong> цель уже достигнута на текущем балансе.`;
+    } else {
+      card2.innerHTML = `Чтобы накопить за <strong>${formatPeriod(period)}</strong>,<br>нужно вносить <strong>${shortMoney(Math.ceil(needed))}/мес</strong>`;
+    }
+    elements.goalInsight.append(card2);
+  }
+
+  if (topUp === 0 && period === 0) {
+    const card = document.createElement("div");
+    card.className = "insight-card warn";
+    card.textContent = "Задай ежемесячный взнос или срок мечты, чтобы увидеть расчёт.";
+    elements.goalInsight.append(card);
+  }
 }
 
 function parseOutputValue(outputEl) {
@@ -1324,11 +1449,16 @@ function syncInputs() {
   elements.annualRate.value = state.annualRate;
   elements.annualRateOutput.textContent = `${Number(state.annualRate).toLocaleString("ru-RU")}%`;
   elements.currency.value = state.currency;
-  elements.exchangeRate.value = Math.min(state.exchangeRate, 500);
-  elements.exchangeRateOutput.textContent = `${Number(state.exchangeRate).toLocaleString("ru-RU")} ₽`;
   elements.monthlyTopUp.value = Math.min(state.monthlyTopUp, 50000);
   elements.monthlyTopUpOutput.textContent = shortMoney(state.monthlyTopUp);
+  const period = Number(state.goalPeriodMonths) || 0;
+  elements.goalPeriod.value = period;
+  elements.goalPeriodOutput.textContent = period > 0 ? formatPeriod(period) : "не задан";
   elements.transactionAmountOutput.textContent = shortMoney(elements.transactionAmount.value);
+  const meta = currencyMeta[state.currency] || currencyMeta.USD;
+  if (elements.rateValue) {
+    elements.rateValue.textContent = `1 ${state.currency} = ${Number(state.exchangeRate).toLocaleString("ru-RU")} ₽`;
+  }
 }
 
 function renderSummary(total) {
@@ -1459,6 +1589,7 @@ function render() {
   const total = Math.max(Number(state.balance), 0);
   renderGoals(total);
   renderSummary(total);
+  renderGoalInsight(total);
   renderScenarios(total);
   renderChart(total);
   renderHistory();
@@ -1476,7 +1607,7 @@ async function loadRates() {
 
     if (updated) {
       const meta = currencyMeta[state.currency];
-      if (meta && state.currency !== "CUSTOM") {
+      if (meta) {
         state.exchangeRate = meta.rate;
         saveState();
       }
@@ -1527,16 +1658,18 @@ document.querySelectorAll(".sim-btn").forEach((button) => {
 
 elements.addGoalButton.addEventListener("click", createGoal);
 
-[elements.goalAmount, elements.annualRate, elements.exchangeRate, elements.monthlyTopUp].forEach((control) => {
+[elements.goalAmount, elements.annualRate, elements.monthlyTopUp, elements.goalPeriod].forEach((control) => {
   control.addEventListener("input", applySliderValues);
 });
 
 elements.goalName.addEventListener("input", applySliderValues);
 
 elements.currency.addEventListener("change", () => {
-  const meta = currencyMeta[elements.currency.value] || currencyMeta.CUSTOM;
-  elements.exchangeRate.value = meta.rate;
-  applySliderValues();
+  const meta = currencyMeta[elements.currency.value] || currencyMeta.USD;
+  state.currency = elements.currency.value;
+  state.exchangeRate = meta.rate;
+  saveState();
+  render();
 });
 
 elements.transactionAmount.addEventListener("input", () => {
@@ -1602,13 +1735,6 @@ makeOutputEditable(elements.monthlyTopUpOutput, (val) => {
   saveState();
   render();
 }, { min: 0, step: 100 });
-
-makeOutputEditable(elements.exchangeRateOutput, (val) => {
-  state.exchangeRate = clamp(val, 1, 10000);
-  elements.exchangeRate.value = Math.min(state.exchangeRate, 500);
-  saveState();
-  render();
-}, { min: 1, step: 0.1 });
 
 makeOutputEditable(elements.transactionAmountOutput, (val) => {
   const clamped = Math.max(val, 100);
