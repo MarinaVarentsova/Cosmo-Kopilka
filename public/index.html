@@ -571,6 +571,14 @@ button:focus {
 #goalLeft {
   margin-top: 9px;
   font-weight: 800;
+  margin-bottom: 4px;
+}
+
+#goalWhen {
+  font-size: 13px;
+  color: var(--leaf);
+  font-weight: 900;
+  margin: 0;
 }
 
 #goalLeft span,
@@ -878,6 +886,7 @@ button:focus {
               <div id="goalBar" class="progress-fill"></div>
             </div>
             <p id="goalLeft">Осталось 20 000 ₽</p>
+            <p id="goalWhen"></p>
           </div>
         </section>
       </section>
@@ -1070,6 +1079,7 @@ const elements = {
   goalPercent: document.querySelector("#goalPercent"),
   goalBar: document.querySelector("#goalBar"),
   goalLeft: document.querySelector("#goalLeft"),
+  goalWhen: document.querySelector("#goalWhen"),
   transactionForm: document.querySelector("#transactionForm"),
   transactionAmount: document.querySelector("#transactionAmount"),
   transactionAmountOutput: document.querySelector("#transactionAmountOutput"),
@@ -1472,9 +1482,24 @@ function renderSummary(total) {
   elements.goalLabel.textContent = goal.name;
   elements.goalPercent.textContent = `${Math.round(percent)}%`;
   elements.goalBar.style.width = `${percent}%`;
-  elements.goalLeft.innerHTML = left > 0
-    ? `Осталось ${money(left)} <span>${convertedMoney(left)}</span>`
-    : `Цель достигнута <span>${convertedMoney(total)}</span>`;
+
+  if (left > 0) {
+    elements.goalLeft.innerHTML = `Осталось ${money(left)} <span>${convertedMoney(left)}</span>`;
+    const n = monthsToGoal(total, goalAmount, Number(state.annualRate), Number(state.monthlyTopUp));
+    if (isFinite(n) && n > 0) {
+      const arrival = new Date();
+      arrival.setMonth(arrival.getMonth() + n);
+      const dateStr = arrival.toLocaleDateString("ru-RU", { month: "long", year: "numeric" });
+      elements.goalWhen.textContent = `Достигнешь через ${formatPeriod(n)} — ${dateStr}`;
+    } else if (!isFinite(n)) {
+      elements.goalWhen.textContent = "Увеличь взнос или ставку, чтобы накопить";
+    } else {
+      elements.goalWhen.textContent = "";
+    }
+  } else {
+    elements.goalLeft.innerHTML = `Цель достигнута <span>${convertedMoney(total)}</span>`;
+    elements.goalWhen.textContent = "🎉";
+  }
 }
 
 function renderGoals(total) {
