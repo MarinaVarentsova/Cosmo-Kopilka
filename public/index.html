@@ -684,6 +684,31 @@ button.danger {
   50%       { transform: translateY(-8px) rotate(4deg); }
 }
 
+.controls-space-scene {
+  margin-top: 20px;
+  min-height: 0;
+  height: 200px;
+  border-radius: 18px;
+}
+
+.scene-rocket {
+  position: absolute;
+  font-size: 32px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  animation: rocket-fly 5s ease-in-out infinite;
+  filter: drop-shadow(0 4px 12px rgba(35,185,154,0.5));
+}
+
+@keyframes rocket-fly {
+  0%   { transform: translate(-80%, 30%) rotate(-35deg); opacity: 0; }
+  15%  { opacity: 1; }
+  50%  { transform: translate(-50%, -55%) rotate(-25deg); opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translate(20%, -120%) rotate(-20deg); opacity: 0; }
+}
+
 button.sim-btn {
   background: var(--grape);
   color: white;
@@ -1414,6 +1439,15 @@ button:focus {
               <button type="submit" value="withdraw" class="secondary">Потратить</button>
             </div>
           </form>
+
+          <div class="rocket-stage controls-space-scene" aria-hidden="true">
+            <div class="planet planet-blue"></div>
+            <div class="planet planet-yellow"></div>
+            <div class="coin coin-one">₽</div>
+            <div class="coin coin-two">%</div>
+            <div class="coin coin-three">+</div>
+            <div class="scene-rocket">🚀</div>
+          </div>
 
         </aside>
 
