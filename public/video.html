@@ -817,8 +817,8 @@ body {
   <!-- ─── Scene 3: Goal & Progress ─── -->
   <div class="scene" id="s3">
     <p class="scene-label">Шаг 2 — Цель</p>
-    <h2 class="table-title">🎯 Новый ноутбук</h2>
-    <p class="table-sub">Цель: 50 000 ₽ · сейчас в копилке 10 000 ₽</p>
+    <h2 class="table-title">🎯 Клавиатура</h2>
+    <p class="table-sub">Цель: 20 000 ₽ · сейчас в копилке 10 000 ₽</p>
     <div class="goal-demo-block">
       <div class="goal-demo-row">
         <span class="gdemo-lbl">Сейчас</span>
@@ -826,17 +826,17 @@ body {
           <div class="gdemo-fill" id="fillNow"></div>
           <span class="gdemo-rocket">🚀</span>
         </div>
-        <span class="gdemo-pct">20%</span>
+        <span class="gdemo-pct">50%</span>
       </div>
       <div class="goal-demo-row">
-        <span class="gdemo-lbl">Через год</span>
+        <span class="gdemo-lbl">Через 9 мес</span>
         <div class="gdemo-track">
           <div class="gdemo-fill gdemo-fill-yr" id="fillYr"></div>
-          <span class="gdemo-rocket">🚀</span>
+          <span class="gdemo-rocket">🎉</span>
         </div>
-        <span class="gdemo-pct gdemo-pct-yr">47.9%</span>
+        <span class="gdemo-pct gdemo-pct-yr">100%</span>
       </div>
-      <p class="gdemo-note">При ставке 12% и взносе 1 000 ₽/мес через год будет <strong>23 950 ₽</strong> — почти половина цели</p>
+      <p class="gdemo-note">При ставке 12% и взносе 1 000 ₽/мес цель будет достигнута уже <strong>через ~9 месяцев!</strong></p>
     </div>
   </div>
 
@@ -987,11 +987,11 @@ function animateScene2() {
 function animateScene3() {
   setTimeout(() => {
     const fillNow = document.getElementById('fillNow');
-    if (fillNow) fillNow.style.width = '20%';
+    if (fillNow) fillNow.style.width = '50%';
   }, 700);
   setTimeout(() => {
     const fillYr = document.getElementById('fillYr');
-    if (fillYr) fillYr.style.width = '47.9%';
+    if (fillYr) fillYr.style.width = '100%';
   }, 1400);
 }
 
