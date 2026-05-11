@@ -517,6 +517,12 @@ p {
   color: var(--space);
 }
 
+.year-table .cell-topup {
+  color: var(--sky);
+  font-weight: 900;
+  text-align: right;
+}
+
 .year-table .cell-interest {
   color: var(--leaf);
   font-weight: 900;
@@ -1588,7 +1594,8 @@ button:focus {
                     <th>Период</th>
                     <th>Сумма в начало</th>
                     <th>Ставка % в мес.</th>
-                    <th>Начислено</th>
+                    <th>Начислено %</th>
+                    <th>Пополнение</th>
                     <th>Сумма в конец</th>
                   </tr>
                 </thead>
@@ -2274,6 +2281,7 @@ function renderYearTable() {
       <td>${start.toLocaleString("ru-RU")} ₽</td>
       <td>${rateStr}</td>
       <td class="cell-interest">+${interest.toLocaleString("ru-RU")} ₽</td>
+      <td class="cell-topup">${topUp > 0 ? "+" + topUp.toLocaleString("ru-RU") + " ₽" : "—"}</td>
       <td class="cell-end">${end.toLocaleString("ru-RU")} ₽</td>
     </tr>`;
   }
@@ -2283,6 +2291,7 @@ function renderYearTable() {
     <td>${balance.toLocaleString("ru-RU")} ₽ → ${finalEnd.toLocaleString("ru-RU")} ₽</td>
     <td>—</td>
     <td class="cell-interest">+${totalInterest.toLocaleString("ru-RU")} ₽</td>
+    <td class="cell-topup">${totalTopUp > 0 ? "+" + totalTopUp.toLocaleString("ru-RU") + " ₽" : "—"}</td>
     <td class="cell-end">${finalEnd.toLocaleString("ru-RU")} ₽</td>
   </tr>`;
   tbody.innerHTML = rows;
