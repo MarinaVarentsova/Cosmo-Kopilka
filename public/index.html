@@ -343,18 +343,17 @@ p {
   line-height: 1;
 }
 
-.kid-grid {
-  display: grid;
-  grid-template-columns: 1.45fr 1fr;
-  gap: 18px;
-  margin-bottom: 18px;
-}
-
-.layout {
+.app-grid {
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: 18px;
-  align-items: start;
+}
+
+.left-col,
+.right-col {
+  display: grid;
+  gap: 18px;
+  align-content: start;
 }
 
 .main-column {
@@ -907,10 +906,14 @@ button:focus {
 
 @media (max-width: 980px) {
   .hero,
-  .kid-grid,
-  .layout,
+  .app-grid,
   .scenario-grid {
     grid-template-columns: 1fr;
+  }
+
+  .left-col,
+  .right-col {
+    gap: 14px;
   }
 
   .rocket-stage {
@@ -978,16 +981,16 @@ button:focus {
         </div>
       </section>
 
-      <section class="kid-grid">
+      <div class="app-grid">
+        <div class="left-col">
         <section class="panel big-control">
           <div class="section-title">
             <div>
               <h2>Деньги сейчас</h2>
-              <p>Нажми на сумму, чтобы ввести вручную, или двигай ползунок.</p>
+              <p>Нажми на сумму, чтобы ввести вручную.</p>
             </div>
             <output id="balanceOutput">0 ₽</output>
           </div>
-          <input id="balanceSlider" class="range-xl" type="range" min="0" max="1000000" step="1000" value="3000" />
           <div class="quick-buttons" aria-label="Быстрые изменения баланса">
             <button type="button" data-adjust="-500" class="chip">-500</button>
             <button type="button" data-adjust="-100" class="chip">-100</button>
@@ -997,6 +1000,57 @@ button:focus {
           </div>
         </section>
 
+        <aside class="panel controls-panel">
+          <h2>Рычажки будущего</h2>
+
+          <label class="name-field">
+            <span>Название выбранной цели</span>
+            <input id="goalName" type="text" maxlength="40" value="Новая мечта" />
+          </label>
+
+          <label class="slider-field">
+            <span>Сумма выбранной цели</span>
+            <output id="goalAmountOutput">20 000 ₽</output>
+            <input id="goalAmount" type="range" min="1000" max="5000000" step="1000" value="20000" />
+          </label>
+
+          <label class="slider-field">
+            <span>Ставка в год</span>
+            <output id="annualRateOutput">12%</output>
+            <input id="annualRate" type="range" min="0" max="50" step="0.5" value="12" />
+          </label>
+          <p class="edu-tip">Каждый месяц к балансу прибавляется ставка 12% годовых. В следующем месяце проценты считаются уже с суммы вложения + начисленных % — вот в чём сила сложного процента.</p>
+
+          <label class="slider-field">
+            <span>Пополнять каждый месяц</span>
+            <output id="monthlyTopUpOutput">0 ₽</output>
+            <input id="monthlyTopUp" type="range" min="0" max="50000" step="100" value="0" />
+          </label>
+
+          <label class="slider-field">
+            <span>Срок мечты</span>
+            <output id="goalPeriodOutput">не задан</output>
+            <input id="goalPeriod" type="range" min="0" max="120" step="1" value="0" />
+          </label>
+
+          <div id="goalInsight" class="goal-insight"></div>
+
+          <label class="select-field">
+            <span>Валюта просмотра</span>
+            <select id="currency">
+              <option value="USD">$ доллар</option>
+              <option value="CNY">¥ юань</option>
+              <option value="EUR">€ евро</option>
+            </select>
+          </label>
+          <div class="rate-display">
+            <span id="rateValue" class="rate-value"></span>
+            <span id="ratesStatus" class="rates-status"></span>
+          </div>
+        </aside>
+        </div>
+
+        <div class="right-col">
         <section class="panel goal-panel">
           <div class="section-title">
             <div>
@@ -1021,57 +1075,6 @@ button:focus {
             <p id="goalWhen"></p>
           </div>
         </section>
-      </section>
-
-      <section class="layout">
-        <aside class="panel controls-panel">
-          <h2>Рычажки будущего</h2>
-
-          <label class="name-field">
-            <span>Название выбранной цели</span>
-            <input id="goalName" type="text" maxlength="40" value="Новая мечта" />
-          </label>
-
-          <label class="slider-field">
-            <span>Сумма выбранной цели</span>
-            <output id="goalAmountOutput">20 000 ₽</output>
-            <input id="goalAmount" type="range" min="1000" max="5000000" step="1000" value="20000" />
-          </label>
-
-          <label class="slider-field">
-            <span>Ставка в год</span>
-            <output id="annualRateOutput">12%</output>
-            <input id="annualRate" type="range" min="0" max="50" step="0.5" value="12" />
-          </label>
-          <p class="edu-tip">Каждый месяц к балансу прибавляется ставка 12% годовых. В следующем месяце проценты считаются уже с суммы вложения + начисленных % — вот в чём сила сложного процента.</p>
-
-          <label class="slider-field">
-            <span>Пополнять каждый месяц</span>
-            <output id="monthlyTopUpOutput">500 ₽</output>
-            <input id="monthlyTopUp" type="range" min="0" max="50000" step="100" value="500" />
-          </label>
-
-          <label class="slider-field">
-            <span>Срок мечты</span>
-            <output id="goalPeriodOutput">не задан</output>
-            <input id="goalPeriod" type="range" min="0" max="120" step="1" value="0" />
-          </label>
-
-          <div id="goalInsight" class="goal-insight"></div>
-
-          <label class="select-field">
-            <span>Валюта просмотра</span>
-            <select id="currency">
-              <option value="USD">$ доллар</option>
-              <option value="CNY">¥ юань</option>
-              <option value="EUR">€ евро</option>
-            </select>
-          </label>
-          <div class="rate-display">
-            <span id="rateValue" class="rate-value"></span>
-            <span id="ratesStatus" class="rates-status"></span>
-          </div>
-        </aside>
 
         <section class="main-column">
           <section class="panel action-panel">
@@ -1141,7 +1144,8 @@ button:focus {
             <div id="historyList" class="history-list"></div>
           </section>
         </section>
-      </section>
+        </div>
+      </div>
     </main>
 
     <script>
@@ -1164,7 +1168,7 @@ const scenarioMonths = [
 ];
 
 const defaults = {
-  balance: 3000,
+  balance: 0,
   activeGoalId: "goal-1",
   goals: [
     {
@@ -1176,7 +1180,7 @@ const defaults = {
   annualRate: 12,
   currency: "USD",
   exchangeRate: 92,
-  monthlyTopUp: 500,
+  monthlyTopUp: 0,
   goalPeriodMonths: 0,
   interestCount: 0,
   transactions: [
@@ -1196,7 +1200,6 @@ let balanceBeforeSlide = Number(state.balance) || 0;
 const elements = {
   currentBalance: document.querySelector("#currentBalance"),
   convertedBalance: document.querySelector("#convertedBalance"),
-  balanceSlider: document.querySelector("#balanceSlider"),
   balanceOutput: document.querySelector("#balanceOutput"),
   addGoalButton: document.querySelector("#addGoalButton"),
   goalList: document.querySelector("#goalList"),
@@ -1592,7 +1595,6 @@ function makeOutputEditable(outputEl, applyFn, options = {}) {
 
 function syncInputs() {
   const goal = activeGoal();
-  elements.balanceSlider.value = Math.min(state.balance, 1000000);
   elements.balanceOutput.textContent = shortMoney(state.balance);
   elements.goalName.value = goal.name;
   elements.goalAmount.value = Math.min(goal.amount, 5000000);
@@ -1825,29 +1827,6 @@ async function loadRates() {
   } catch {
   }
 }
-
-elements.balanceSlider.addEventListener("pointerdown", () => {
-  balanceBeforeSlide = Number(state.balance) || 0;
-});
-
-elements.balanceSlider.addEventListener("focus", () => {
-  balanceBeforeSlide = Number(state.balance) || 0;
-});
-
-elements.balanceSlider.addEventListener("input", () => setBalance(elements.balanceSlider.value));
-
-elements.balanceSlider.addEventListener("change", () => {
-  const next = Number(elements.balanceSlider.value) || 0;
-  if (next !== balanceBeforeSlide) {
-    recordTransaction(
-      next > balanceBeforeSlide ? "deposit" : "withdraw",
-      Math.abs(next - balanceBeforeSlide),
-      next > balanceBeforeSlide ? "Баланс увеличен" : "Баланс уменьшен"
-    );
-    saveState();
-    render();
-  }
-});
 
 document.querySelectorAll(".quick-buttons button").forEach((button) => {
   button.addEventListener("click", () => {
