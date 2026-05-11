@@ -575,6 +575,30 @@ button.danger {
   color: var(--danger);
 }
 
+.reset-float-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  background: white;
+  color: var(--danger);
+  border: 2px solid rgba(220, 60, 60, 0.25);
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+  transition: background 120ms, box-shadow 120ms, transform 120ms;
+}
+
+.reset-float-btn:hover {
+  background: #fff0f0;
+  border-color: var(--danger);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+  transform: translateY(-1px);
+}
+
 button.sim-btn {
   background: var(--grape);
   color: white;
@@ -1267,6 +1291,8 @@ button:focus {
 
       </div>
     </main>
+
+    <button id="resetFloatBtn" type="button" class="reset-float-btn" title="Начать заново">↺ Начать заново</button>
 
     <script>
 const storageKey = "family-capital-v2";
@@ -2030,6 +2056,7 @@ function doReset() {
 }
 
 elements.resetButton.addEventListener("click", doReset);
+document.querySelector("#resetFloatBtn").addEventListener("click", doReset);
 
 makeOutputEditable(elements.balanceOutput, (val) => setBalance(val, true), { min: 0, step: 100 });
 
