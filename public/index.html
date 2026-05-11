@@ -575,28 +575,21 @@ button.danger {
   color: var(--danger);
 }
 
-.reset-float-btn {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 100;
-  background: white;
+.reset-inline-btn {
+  background: transparent;
   color: var(--danger);
-  border: 2px solid rgba(220, 60, 60, 0.25);
+  border: 2px solid rgba(220, 60, 60, 0.22);
   border-radius: 999px;
-  padding: 12px 20px;
-  font-size: 14px;
+  padding: 6px 14px;
+  font-size: 13px;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.10);
-  transition: background 120ms, box-shadow 120ms, transform 120ms;
+  transition: background 120ms, border-color 120ms;
 }
 
-.reset-float-btn:hover {
+.reset-inline-btn:hover {
   background: #fff0f0;
   border-color: var(--danger);
-  box-shadow: 0 6px 24px rgba(0,0,0,0.14);
-  transform: translateY(-1px);
 }
 
 button.sim-btn {
@@ -1134,6 +1127,9 @@ button:focus {
                 <small id="balanceInCurrency" style="font-size:13px;font-weight:900;color:var(--muted)">0 $</small>
               </div>
             </div>
+            <div style="margin-top:14px;text-align:right">
+              <button id="resetFloatBtn" type="button" class="reset-inline-btn">↺ Начать заново</button>
+            </div>
           </section>
 
           <section class="panel currency-panel">
@@ -1292,7 +1288,6 @@ button:focus {
       </div>
     </main>
 
-    <button id="resetFloatBtn" type="button" class="reset-float-btn" title="Начать заново">↺ Начать заново</button>
 
     <script>
 const storageKey = "family-capital-v2";
