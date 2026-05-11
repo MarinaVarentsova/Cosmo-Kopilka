@@ -247,23 +247,18 @@ p {
   line-height: 1;
 }
 
-.layout {
+.kid-grid {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 1.45fr 1fr;
   gap: 18px;
-  align-items: start;
   margin-bottom: 18px;
 }
 
-.left-stack {
+.layout {
   display: grid;
+  grid-template-columns: 320px 1fr;
   gap: 18px;
-  align-content: start;
-}
-
-.currency-card {
-  display: grid;
-  gap: 10px;
+  align-items: start;
 }
 
 .main-column {
@@ -816,6 +811,7 @@ button:focus {
 
 @media (max-width: 980px) {
   .hero,
+  .kid-grid,
   .layout,
   .scenario-grid {
     grid-template-columns: 1fr;
@@ -888,107 +884,99 @@ button:focus {
         </div>
       </section>
 
+      <section class="kid-grid">
+        <section class="panel big-control">
+          <div class="section-title">
+            <div>
+              <h2>Деньги сейчас</h2>
+              <p>Нажми на сумму, чтобы ввести вручную, или двигай ползунок.</p>
+            </div>
+            <output id="balanceOutput">0 ₽</output>
+          </div>
+          <input id="balanceSlider" class="range-xl" type="range" min="0" max="1000000" step="1000" value="3000" />
+          <div class="quick-buttons" aria-label="Быстрые изменения баланса">
+            <button type="button" data-adjust="-500" class="chip">-500</button>
+            <button type="button" data-adjust="-100" class="chip">-100</button>
+            <button type="button" data-adjust="100" class="chip">+100</button>
+            <button type="button" data-adjust="500" class="chip">+500</button>
+            <button type="button" data-adjust="1000" class="chip">+1000</button>
+          </div>
+        </section>
+
+        <section class="panel goal-panel">
+          <div class="section-title">
+            <div>
+              <h2>Мои цели</h2>
+              <p>Выбери цель, а потом настрой её имя и сумму.</p>
+            </div>
+            <button id="addGoalButton" type="button" class="chip add-goal">+ цель</button>
+          </div>
+          <div id="goalList" class="goal-list"></div>
+          <div class="goal-meter">
+            <div class="progress-top">
+              <span id="goalLabel">Новая мечта</span>
+              <strong id="goalPercent">0%</strong>
+            </div>
+            <div class="progress-track">
+              <div id="goalBar" class="progress-fill"></div>
+            </div>
+            <p id="goalLeft">Осталось 20 000 ₽</p>
+            <p id="goalWhen"></p>
+          </div>
+        </section>
+      </section>
+
       <section class="layout">
+        <aside class="panel controls-panel">
+          <h2>Рычажки будущего</h2>
 
-        <!-- ЛЕВАЯ КОЛОНКА: баланс → валюта → рычажки -->
-        <div class="left-stack">
+          <label class="name-field">
+            <span>Название выбранной цели</span>
+            <input id="goalName" type="text" maxlength="40" value="Новая мечта" />
+          </label>
 
-          <section class="panel big-control">
-            <div class="section-title">
-              <div>
-                <h2>Деньги сейчас</h2>
-                <p>Нажми на сумму или двигай ползунок.</p>
-              </div>
-              <output id="balanceOutput">0 ₽</output>
-            </div>
-            <input id="balanceSlider" class="range-xl" type="range" min="0" max="1000000" step="1000" value="3000" />
-            <div class="quick-buttons" aria-label="Быстрые изменения баланса">
-              <button type="button" data-adjust="-500" class="chip">-500</button>
-              <button type="button" data-adjust="-100" class="chip">-100</button>
-              <button type="button" data-adjust="100" class="chip">+100</button>
-              <button type="button" data-adjust="500" class="chip">+500</button>
-              <button type="button" data-adjust="1000" class="chip">+1000</button>
-            </div>
-          </section>
+          <label class="slider-field">
+            <span>Сумма выбранной цели</span>
+            <output id="goalAmountOutput">20 000 ₽</output>
+            <input id="goalAmount" type="range" min="1000" max="5000000" step="1000" value="20000" />
+          </label>
 
-          <section class="panel currency-card">
-            <label class="select-field">
-              <span>Валюта просмотра</span>
-              <select id="currency">
-                <option value="USD">$ доллар</option>
-                <option value="CNY">¥ юань</option>
-                <option value="EUR">€ евро</option>
-              </select>
-            </label>
-            <div class="rate-display">
-              <span id="rateValue" class="rate-value"></span>
-              <span id="ratesStatus" class="rates-status"></span>
-            </div>
-          </section>
+          <label class="slider-field">
+            <span>Ставка в год</span>
+            <output id="annualRateOutput">12%</output>
+            <input id="annualRate" type="range" min="0" max="50" step="0.5" value="12" />
+          </label>
+          <p class="edu-tip">Каждый месяц к балансу прибавляется ставка 12% годовых. В следующем месяце проценты считаются уже с суммы вложения + начисленных % — вот в чём сила сложного процента.</p>
 
-          <aside class="panel controls-panel">
-            <h2>Рычажки будущего</h2>
+          <label class="slider-field">
+            <span>Пополнять каждый месяц</span>
+            <output id="monthlyTopUpOutput">500 ₽</output>
+            <input id="monthlyTopUp" type="range" min="0" max="50000" step="100" value="500" />
+          </label>
 
-            <label class="name-field">
-              <span>Название выбранной цели</span>
-              <input id="goalName" type="text" maxlength="40" value="Новая мечта" />
-            </label>
+          <label class="slider-field">
+            <span>Срок мечты</span>
+            <output id="goalPeriodOutput">не задан</output>
+            <input id="goalPeriod" type="range" min="0" max="120" step="1" value="0" />
+          </label>
 
-            <label class="slider-field">
-              <span>Сумма выбранной цели</span>
-              <output id="goalAmountOutput">20 000 ₽</output>
-              <input id="goalAmount" type="range" min="1000" max="5000000" step="1000" value="20000" />
-            </label>
+          <div id="goalInsight" class="goal-insight"></div>
 
-            <label class="slider-field">
-              <span>Ставка в год</span>
-              <output id="annualRateOutput">12%</output>
-              <input id="annualRate" type="range" min="0" max="50" step="0.5" value="12" />
-            </label>
-            <p class="edu-tip">Каждый месяц к балансу прибавляется ставка 12% годовых. В следующем месяце проценты считаются уже с суммы вложения + начисленных % — вот в чём сила сложного процента.</p>
+          <label class="select-field">
+            <span>Валюта просмотра</span>
+            <select id="currency">
+              <option value="USD">$ доллар</option>
+              <option value="CNY">¥ юань</option>
+              <option value="EUR">€ евро</option>
+            </select>
+          </label>
+          <div class="rate-display">
+            <span id="rateValue" class="rate-value"></span>
+            <span id="ratesStatus" class="rates-status"></span>
+          </div>
+        </aside>
 
-            <label class="slider-field">
-              <span>Пополнять каждый месяц</span>
-              <output id="monthlyTopUpOutput">500 ₽</output>
-              <input id="monthlyTopUp" type="range" min="0" max="50000" step="100" value="500" />
-            </label>
-
-            <label class="slider-field">
-              <span>Срок мечты</span>
-              <output id="goalPeriodOutput">не задан</output>
-              <input id="goalPeriod" type="range" min="0" max="120" step="1" value="0" />
-            </label>
-
-            <div id="goalInsight" class="goal-insight"></div>
-          </aside>
-
-        </div>
-
-        <!-- ПРАВАЯ КОЛОНКА: цели → событие → прогнозы -->
         <section class="main-column">
-
-          <section class="panel goal-panel">
-            <div class="section-title">
-              <div>
-                <h2>Мои цели</h2>
-                <p>Выбери цель, а потом настрой её имя и сумму.</p>
-              </div>
-              <button id="addGoalButton" type="button" class="chip add-goal">+ цель</button>
-            </div>
-            <div id="goalList" class="goal-list"></div>
-            <div class="goal-meter">
-              <div class="progress-top">
-                <span id="goalLabel">Новая мечта</span>
-                <strong id="goalPercent">0%</strong>
-              </div>
-              <div class="progress-track">
-                <div id="goalBar" class="progress-fill"></div>
-              </div>
-              <p id="goalLeft">Осталось 20 000 ₽</p>
-              <p id="goalWhen"></p>
-            </div>
-          </section>
-
           <section class="panel action-panel">
             <div class="section-title">
               <div>
@@ -1048,15 +1036,14 @@ button:focus {
             </article>
           </section>
 
+          <section class="panel history-panel">
+            <div class="history-title">
+              <h2>Дневник решений</h2>
+              <button id="resetButton" type="button" class="ghost danger">Начать заново</button>
+            </div>
+            <div id="historyList" class="history-list"></div>
+          </section>
         </section>
-      </section>
-
-      <section class="panel history-panel">
-        <div class="history-title">
-          <h2>Дневник решений</h2>
-          <button id="resetButton" type="button" class="ghost danger">Начать заново</button>
-        </div>
-        <div id="historyList" class="history-list"></div>
       </section>
     </main>
 
