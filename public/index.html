@@ -286,6 +286,34 @@ output {
   color: var(--ink);
   padding: 8px 12px;
   font-weight: 900;
+  cursor: pointer;
+  user-select: none;
+  transition: background 120ms;
+  position: relative;
+}
+
+output:hover {
+  background: #ffe566;
+}
+
+output[data-editing="true"] {
+  background: white;
+  padding: 0;
+  border: 2px solid var(--grape);
+}
+
+.output-input {
+  width: 110px;
+  height: 38px;
+  border: none;
+  border-radius: 999px;
+  background: white;
+  color: var(--ink);
+  font-weight: 900;
+  font-size: inherit;
+  text-align: center;
+  padding: 0 12px;
+  outline: none;
 }
 
 .range-xl,
@@ -340,6 +368,19 @@ button.danger {
   color: var(--danger);
 }
 
+button.sim-btn {
+  background: var(--grape);
+  color: white;
+  min-height: 38px;
+  font-size: 13px;
+  box-shadow: 0 5px 0 rgba(35, 48, 71, 0.12);
+}
+
+button.sim-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 rgba(35, 48, 71, 0.12);
+}
+
 input[type="text"],
 select {
   width: 100%;
@@ -383,6 +424,27 @@ button:focus {
 
 .slider-field input {
   grid-column: 1 / -1;
+}
+
+.edu-tip {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  color: var(--muted);
+  background: #f0fff8;
+  border: 2px solid rgba(35, 185, 154, 0.22);
+  border-radius: 12px;
+  padding: 9px 12px;
+  margin-top: -6px;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+.rates-status {
+  font-size: 11px;
+  color: var(--leaf);
+  font-weight: 900;
+  margin-top: 4px;
+  display: block;
 }
 
 .goal-meter {
@@ -499,6 +561,24 @@ button:focus {
   gap: 10px;
 }
 
+.simulate-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 4px 0 2px;
+  border-top: 2px dashed rgba(35, 48, 71, 0.1);
+  padding-top: 14px;
+}
+
+.simulate-row > span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 .scenario-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
@@ -542,8 +622,12 @@ button:focus {
   font-weight: 900;
 }
 
+.chart-wrap {
+  position: relative;
+}
+
 .chart {
-  height: 282px;
+  height: 252px;
   display: flex;
   align-items: end;
   gap: 7px;
@@ -556,15 +640,16 @@ button:focus {
   border-radius: 10px 10px 4px 4px;
   background: linear-gradient(180deg, var(--sun), var(--coral));
   position: relative;
+  overflow: hidden;
 }
 
-.bar::before {
-  content: "";
+.bar-interest {
   position: absolute;
-  inset: 7px 6px auto;
-  height: 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.46);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, var(--mint), var(--leaf));
+  border-radius: 0 0 4px 4px;
 }
 
 .bar span {
@@ -574,11 +659,45 @@ button:focus {
   color: var(--muted);
   font-size: 11px;
   font-weight: 900;
+  z-index: 1;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--muted);
+}
+
+.chart-legend span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legend-dot.contrib {
+  background: linear-gradient(180deg, var(--sun), var(--coral));
+}
+
+.legend-dot.interest {
+  background: linear-gradient(180deg, var(--mint), var(--leaf));
 }
 
 .history-list {
   display: grid;
   gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .history-item {
@@ -688,11 +807,11 @@ button:focus {
           <div class="section-title">
             <div>
               <h2>Деньги сейчас</h2>
-              <p>Можно быстро поставить реальный баланс из копилки.</p>
+              <p>Нажми на сумму, чтобы ввести вручную, или двигай ползунок.</p>
             </div>
             <output id="balanceOutput">0 ₽</output>
           </div>
-          <input id="balanceSlider" class="range-xl" type="range" min="0" max="100000" step="100" value="3000" />
+          <input id="balanceSlider" class="range-xl" type="range" min="0" max="1000000" step="1000" value="3000" />
           <div class="quick-buttons" aria-label="Быстрые изменения баланса">
             <button type="button" data-adjust="-500" class="chip">-500</button>
             <button type="button" data-adjust="-100" class="chip">-100</button>
@@ -736,19 +855,20 @@ button:focus {
           <label class="slider-field">
             <span>Сумма выбранной цели</span>
             <output id="goalAmountOutput">20 000 ₽</output>
-            <input id="goalAmount" type="range" min="1000" max="150000" step="1000" value="20000" />
+            <input id="goalAmount" type="range" min="1000" max="5000000" step="1000" value="20000" />
           </label>
 
           <label class="slider-field">
             <span>Ставка в год</span>
             <output id="annualRateOutput">12%</output>
-            <input id="annualRate" type="range" min="0" max="30" step="0.5" value="12" />
+            <input id="annualRate" type="range" min="0" max="50" step="0.5" value="12" />
           </label>
+          <p class="edu-tip">Каждый месяц к балансу прибавляется ставка ÷ 12. В следующем месяце проценты считаются уже с учётом предыдущих — вот в чём сила сложного процента.</p>
 
           <label class="slider-field">
             <span>Пополнять каждый месяц</span>
             <output id="monthlyTopUpOutput">500 ₽</output>
-            <input id="monthlyTopUp" type="range" min="0" max="10000" step="100" value="500" />
+            <input id="monthlyTopUp" type="range" min="0" max="50000" step="100" value="500" />
           </label>
 
           <label class="select-field">
@@ -764,8 +884,9 @@ button:focus {
           <label class="slider-field">
             <span>Курс: 1 валюта = ₽</span>
             <output id="exchangeRateOutput">92 ₽</output>
-            <input id="exchangeRate" type="range" min="1" max="200" step="0.1" value="92" />
+            <input id="exchangeRate" type="range" min="1" max="500" step="0.1" value="92" />
           </label>
+          <span id="ratesStatus" class="rates-status"></span>
         </aside>
 
         <section class="main-column">
@@ -773,13 +894,13 @@ button:focus {
             <div class="section-title">
               <div>
                 <h2>Записать событие</h2>
-                <p>Сумма выбирается ползунком, потом можно добавить или потратить.</p>
+                <p>Нажми на сумму, чтобы ввести вручную, или двигай ползунок.</p>
               </div>
               <output id="transactionAmountOutput">500 ₽</output>
             </div>
 
             <form id="transactionForm" class="transaction-form">
-              <input id="transactionAmount" class="range-xl" type="range" min="100" max="20000" step="100" value="500" />
+              <input id="transactionAmount" class="range-xl" type="range" min="100" max="500000" step="100" value="500" />
               <label class="note-field">
                 <span>Подпись</span>
                 <input id="transactionNote" type="text" maxlength="60" placeholder="Например: подарок или покупка" />
@@ -790,6 +911,16 @@ button:focus {
                 <button type="button" id="interestButton" class="ghost">Проценты за месяц</button>
               </div>
             </form>
+
+            <div class="simulate-row">
+              <span>Промотать вперёд:</span>
+              <button type="button" class="sim-btn" data-months="1">1 мес</button>
+              <button type="button" class="sim-btn" data-months="3">3 мес</button>
+              <button type="button" class="sim-btn" data-months="6">6 мес</button>
+              <button type="button" class="sim-btn" data-months="12">1 год</button>
+              <button type="button" class="sim-btn" data-months="24">2 года</button>
+              <button type="button" class="sim-btn" data-months="60">5 лет</button>
+            </div>
           </section>
 
           <section class="scenario-grid" aria-label="Прогноз">
@@ -805,7 +936,13 @@ button:focus {
 
             <article class="panel chart-panel">
               <h2>Лестница на 10 лет</h2>
-              <div id="chart" class="chart" aria-hidden="true"></div>
+              <div class="chart-wrap">
+                <div id="chart" class="chart" aria-hidden="true"></div>
+              </div>
+              <div class="chart-legend">
+                <span><i class="legend-dot contrib"></i>взносы</span>
+                <span><i class="legend-dot interest"></i>проценты</span>
+              </div>
             </article>
           </section>
 
@@ -883,6 +1020,7 @@ const elements = {
   currency: document.querySelector("#currency"),
   exchangeRate: document.querySelector("#exchangeRate"),
   exchangeRateOutput: document.querySelector("#exchangeRateOutput"),
+  ratesStatus: document.querySelector("#ratesStatus"),
   goalLabel: document.querySelector("#goalLabel"),
   goalPercent: document.querySelector("#goalPercent"),
   goalBar: document.querySelector("#goalBar"),
@@ -1059,14 +1197,56 @@ function deleteGoal(id) {
 }
 
 function setBalance(value, shouldRecord = false) {
-  const next = clamp(value, 0, 100000);
+  const next = Math.max(Number(value) || 0, 0);
   const previous = Number(state.balance) || 0;
   state.balance = next;
 
   if (shouldRecord && next !== previous) {
-    recordTransaction(next > previous ? "deposit" : "withdraw", Math.abs(next - previous), next > previous ? "Баланс увеличен" : "Баланс уменьшен");
+    recordTransaction(
+      next > previous ? "deposit" : "withdraw",
+      Math.abs(next - previous),
+      next > previous ? "Баланс увеличен" : "Баланс уменьшен"
+    );
   }
 
+  saveState();
+  render();
+}
+
+function simulateMonths(n) {
+  const monthlyRate = Math.max(Number(state.annualRate), 0) / 100 / 12;
+  const topUp = Math.max(Number(state.monthlyTopUp), 0);
+  const now = new Date();
+
+  for (let i = 0; i < n; i++) {
+    const monthDate = new Date(now);
+    monthDate.setMonth(monthDate.getMonth() - (n - 1 - i));
+
+    const interest = Math.round(state.balance * monthlyRate);
+    if (interest > 0) {
+      state.balance += interest;
+      state.transactions.unshift({
+        id: crypto.randomUUID(),
+        type: "interest",
+        amount: interest,
+        note: "Проценты за месяц",
+        date: monthDate.toISOString(),
+      });
+    }
+
+    if (topUp > 0) {
+      state.balance += topUp;
+      state.transactions.unshift({
+        id: crypto.randomUUID(),
+        type: "deposit",
+        amount: topUp,
+        note: "Ежемесячный взнос",
+        date: monthDate.toISOString(),
+      });
+    }
+  }
+
+  state.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
   saveState();
   render();
 }
@@ -1074,28 +1254,79 @@ function setBalance(value, shouldRecord = false) {
 function applySliderValues() {
   const goal = activeGoal();
   goal.name = elements.goalName.value.trim() || "Новая мечта";
-  goal.amount = clamp(elements.goalAmount.value, 1000, 150000);
-  state.annualRate = clamp(elements.annualRate.value, 0, 30);
+  goal.amount = clamp(elements.goalAmount.value, 1000, 5000000);
+  state.annualRate = clamp(elements.annualRate.value, 0, 100);
   state.currency = elements.currency.value;
-  state.exchangeRate = clamp(elements.exchangeRate.value, 1, 200);
-  state.monthlyTopUp = clamp(elements.monthlyTopUp.value, 0, 10000);
+  state.exchangeRate = clamp(elements.exchangeRate.value, 1, 10000);
+  state.monthlyTopUp = clamp(elements.monthlyTopUp.value, 0, 1000000);
   saveState();
   render();
 }
 
+function parseOutputValue(outputEl) {
+  const raw = outputEl.textContent
+    .replace(/\u00a0/g, "")
+    .replace(/\s+/g, "")
+    .replace("₽", "")
+    .replace("%", "")
+    .replace("$", "")
+    .replace("¥", "")
+    .replace("€", "")
+    .replace("¤", "")
+    .replace(",", ".");
+  return parseFloat(raw) || 0;
+}
+
+function makeOutputEditable(outputEl, applyFn, options = {}) {
+  outputEl.title = "Нажми, чтобы ввести число";
+
+  outputEl.addEventListener("click", () => {
+    if (outputEl.dataset.editing === "true") return;
+    outputEl.dataset.editing = "true";
+
+    const currentVal = parseOutputValue(outputEl);
+    outputEl.textContent = "";
+
+    const input = document.createElement("input");
+    input.type = "number";
+    input.className = "output-input";
+    input.value = currentVal;
+    if (options.min !== undefined) input.min = options.min;
+    if (options.max !== undefined) input.max = options.max;
+    if (options.step !== undefined) input.step = options.step;
+
+    outputEl.appendChild(input);
+    input.focus();
+    input.select();
+
+    const finish = () => {
+      const val = parseFloat(input.value);
+      outputEl.dataset.editing = "false";
+      if (!isNaN(val)) applyFn(val);
+      else render();
+    };
+
+    input.addEventListener("blur", finish);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+      if (e.key === "Escape") { outputEl.dataset.editing = "false"; render(); }
+    });
+  });
+}
+
 function syncInputs() {
   const goal = activeGoal();
-  elements.balanceSlider.value = state.balance;
+  elements.balanceSlider.value = Math.min(state.balance, 1000000);
   elements.balanceOutput.textContent = shortMoney(state.balance);
   elements.goalName.value = goal.name;
-  elements.goalAmount.value = goal.amount;
+  elements.goalAmount.value = Math.min(goal.amount, 5000000);
   elements.goalAmountOutput.textContent = shortMoney(goal.amount);
   elements.annualRate.value = state.annualRate;
   elements.annualRateOutput.textContent = `${Number(state.annualRate).toLocaleString("ru-RU")}%`;
   elements.currency.value = state.currency;
-  elements.exchangeRate.value = state.exchangeRate;
+  elements.exchangeRate.value = Math.min(state.exchangeRate, 500);
   elements.exchangeRateOutput.textContent = `${Number(state.exchangeRate).toLocaleString("ru-RU")} ₽`;
-  elements.monthlyTopUp.value = state.monthlyTopUp;
+  elements.monthlyTopUp.value = Math.min(state.monthlyTopUp, 50000);
   elements.monthlyTopUpOutput.textContent = shortMoney(state.monthlyTopUp);
   elements.transactionAmountOutput.textContent = shortMoney(elements.transactionAmount.value);
 }
@@ -1169,18 +1400,30 @@ function renderScenarios(total) {
 
 function renderChart(total) {
   elements.chart.innerHTML = "";
-  const years = Array.from({ length: 10 }, (_, index) => ({
-    label: index + 1,
-    value: projectedBalance(total, (index + 1) * 12),
-  }));
-  const max = Math.max(...years.map((year) => year.value), 1);
+  const topUp = Math.max(Number(state.monthlyTopUp), 0);
+
+  const years = Array.from({ length: 10 }, (_, index) => {
+    const months = (index + 1) * 12;
+    const projected = projectedBalance(total, months);
+    const contributed = total + topUp * months;
+    const earned = Math.max(projected - contributed, 0);
+    return { label: index + 1, value: projected, contributed: Math.min(contributed, projected), earned };
+  });
+
+  const max = Math.max(...years.map((y) => y.value), 1);
 
   years.forEach((year) => {
     const bar = document.createElement("div");
     bar.className = "bar";
-    bar.style.height = `${Math.max((year.value / max) * 100, 4)}%`;
-    bar.title = `${year.label} год: ${money(year.value)}`;
-    bar.innerHTML = `<span>${year.label}</span>`;
+    const heightPct = Math.max((year.value / max) * 100, 4);
+    bar.style.height = `${heightPct}%`;
+    bar.title = `${year.label} год: ${money(year.value)} (проценты: ${money(year.earned)})`;
+
+    const interestPct = year.value > 0 ? (year.earned / year.value) * 100 : 0;
+    bar.innerHTML = `
+      <div class="bar-interest" style="height: ${interestPct}%"></div>
+      <span>${year.label}</span>
+    `;
     elements.chart.append(bar);
   });
 }
@@ -1193,7 +1436,7 @@ function renderHistory() {
     return;
   }
 
-  state.transactions.slice(0, 12).forEach((item) => {
+  state.transactions.forEach((item) => {
     const row = document.createElement("div");
     row.className = "history-item";
     const date = new Intl.DateTimeFormat("ru-RU", {
@@ -1221,6 +1464,32 @@ function render() {
   renderHistory();
 }
 
+async function loadRates() {
+  try {
+    const res = await fetch("/api/rates");
+    if (!res.ok) return;
+    const rates = await res.json();
+    let updated = false;
+    if (rates.USD) { currencyMeta.USD.rate = rates.USD; updated = true; }
+    if (rates.CNY) { currencyMeta.CNY.rate = rates.CNY; updated = true; }
+    if (rates.EUR) { currencyMeta.EUR.rate = rates.EUR; updated = true; }
+
+    if (updated) {
+      const meta = currencyMeta[state.currency];
+      if (meta && state.currency !== "CUSTOM") {
+        state.exchangeRate = meta.rate;
+        saveState();
+      }
+      if (elements.ratesStatus) {
+        const today = new Intl.DateTimeFormat("ru-RU", { day: "2-digit", month: "long" }).format(new Date());
+        elements.ratesStatus.textContent = `Курсы ЦБ РФ на ${today}`;
+      }
+      render();
+    }
+  } catch {
+  }
+}
+
 elements.balanceSlider.addEventListener("pointerdown", () => {
   balanceBeforeSlide = Number(state.balance) || 0;
 });
@@ -1234,7 +1503,11 @@ elements.balanceSlider.addEventListener("input", () => setBalance(elements.balan
 elements.balanceSlider.addEventListener("change", () => {
   const next = Number(elements.balanceSlider.value) || 0;
   if (next !== balanceBeforeSlide) {
-    recordTransaction(next > balanceBeforeSlide ? "deposit" : "withdraw", Math.abs(next - balanceBeforeSlide), next > balanceBeforeSlide ? "Баланс увеличен" : "Баланс уменьшен");
+    recordTransaction(
+      next > balanceBeforeSlide ? "deposit" : "withdraw",
+      Math.abs(next - balanceBeforeSlide),
+      next > balanceBeforeSlide ? "Баланс увеличен" : "Баланс уменьшен"
+    );
     saveState();
     render();
   }
@@ -1243,6 +1516,12 @@ elements.balanceSlider.addEventListener("change", () => {
 document.querySelectorAll(".quick-buttons button").forEach((button) => {
   button.addEventListener("click", () => {
     setBalance((Number(state.balance) || 0) + Number(button.dataset.adjust), true);
+  });
+});
+
+document.querySelectorAll(".sim-btn").forEach((button) => {
+  button.addEventListener("click", () => {
+    simulateMonths(Number(button.dataset.months));
   });
 });
 
@@ -1273,7 +1552,7 @@ elements.transactionForm.addEventListener("submit", (event) => {
   if (action === "withdraw") {
     state.balance = Math.max((Number(state.balance) || 0) - amount, 0);
   } else {
-    state.balance = Math.min((Number(state.balance) || 0) + amount, 100000);
+    state.balance = (Number(state.balance) || 0) + amount;
   }
 
   recordTransaction(action, amount, elements.transactionNote.value.trim());
@@ -1287,7 +1566,7 @@ elements.interestButton.addEventListener("click", () => {
   const monthlyRate = Math.max(Number(state.annualRate), 0) / 100 / 12;
   const interest = Math.round(total * monthlyRate);
   if (interest > 0) {
-    state.balance = Math.min(total + interest, 100000);
+    state.balance = total + interest;
     recordTransaction("interest", interest, "Проценты за месяц");
     saveState();
     render();
@@ -1300,8 +1579,46 @@ elements.resetButton.addEventListener("click", () => {
   render();
 });
 
+makeOutputEditable(elements.balanceOutput, (val) => setBalance(val, true), { min: 0, step: 100 });
+
+makeOutputEditable(elements.goalAmountOutput, (val) => {
+  const goal = activeGoal();
+  goal.amount = Math.max(val, 1000);
+  elements.goalAmount.value = goal.amount;
+  saveState();
+  render();
+}, { min: 1000, step: 1000 });
+
+makeOutputEditable(elements.annualRateOutput, (val) => {
+  state.annualRate = clamp(val, 0, 100);
+  elements.annualRate.value = state.annualRate;
+  saveState();
+  render();
+}, { min: 0, max: 100, step: 0.5 });
+
+makeOutputEditable(elements.monthlyTopUpOutput, (val) => {
+  state.monthlyTopUp = Math.max(val, 0);
+  elements.monthlyTopUp.value = Math.min(state.monthlyTopUp, 50000);
+  saveState();
+  render();
+}, { min: 0, step: 100 });
+
+makeOutputEditable(elements.exchangeRateOutput, (val) => {
+  state.exchangeRate = clamp(val, 1, 10000);
+  elements.exchangeRate.value = Math.min(state.exchangeRate, 500);
+  saveState();
+  render();
+}, { min: 1, step: 0.1 });
+
+makeOutputEditable(elements.transactionAmountOutput, (val) => {
+  const clamped = Math.max(val, 100);
+  elements.transactionAmount.value = Math.min(clamped, 500000);
+  elements.transactionAmountOutput.textContent = shortMoney(clamped);
+}, { min: 100, step: 100 });
+
 saveState();
 render();
+loadRates();
     </script>
   </body>
 </html>
