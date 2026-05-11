@@ -1135,7 +1135,6 @@ button:focus {
               <h2>Мои цели</h2>
               <p>Выбери цель, а потом настрой её имя и сумму.</p>
             </div>
-            <button id="addGoalButton" type="button" class="chip add-goal">+ цель</button>
           </div>
           <div id="goalList" class="goal-list"></div>
           <div class="goal-meter">
@@ -1322,7 +1321,6 @@ const elements = {
   currentBalance: document.querySelector("#currentBalance"),
   convertedBalance: document.querySelector("#convertedBalance"),
   balanceOutput: document.querySelector("#balanceOutput"),
-  addGoalButton: document.querySelector("#addGoalButton"),
   goalList: document.querySelector("#goalList"),
   goalName: document.querySelector("#goalName"),
   goalAmount: document.querySelector("#goalAmount"),
@@ -1987,7 +1985,6 @@ async function loadRates() {
 }
 
 
-elements.addGoalButton.addEventListener("click", createGoal);
 
 [elements.goalAmount, elements.annualRate, elements.monthlyTopUp, elements.goalPeriod].forEach((control) => {
   control.addEventListener("input", applySliderValues);
