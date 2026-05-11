@@ -991,13 +991,6 @@ button:focus {
             </div>
             <output id="balanceOutput">0 ₽</output>
           </div>
-          <div class="quick-buttons" aria-label="Быстрые изменения баланса">
-            <button type="button" data-adjust="-500" class="chip">-500</button>
-            <button type="button" data-adjust="-100" class="chip">-100</button>
-            <button type="button" data-adjust="100" class="chip">+100</button>
-            <button type="button" data-adjust="500" class="chip">+500</button>
-            <button type="button" data-adjust="1000" class="chip">+1000</button>
-          </div>
         </section>
 
         <aside class="panel controls-panel">
@@ -1828,11 +1821,6 @@ async function loadRates() {
   }
 }
 
-document.querySelectorAll(".quick-buttons button").forEach((button) => {
-  button.addEventListener("click", () => {
-    setBalance((Number(state.balance) || 0) + Number(button.dataset.adjust), true);
-  });
-});
 
 document.querySelectorAll(".sim-btn").forEach((button) => {
   button.addEventListener("click", () => {
