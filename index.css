@@ -1,31 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 230 57% 24%; /* #1a2560 */
+    --background: 222 65% 15%; /* #0d1b3e */
     --foreground: 0 0% 100%;
     
-    --primary: 167 68% 43%; /* #23b99a */
-    --primary-foreground: 0 0% 100%;
+    --primary: 38 100% 65%; /* #ffcc4d gold */
+    --primary-foreground: 222 65% 15%;
     
-    --secondary: 42 100% 65%; /* #ffcc4d */
-    --secondary-foreground: 230 57% 24%;
+    --secondary: 209 72% 59%; /* #4d9de0 sky blue */
+    --secondary-foreground: 0 0% 100%;
     
-    --accent: 359 100% 71%; /* #ff6b6b */
+    --accent: 167 68% 43%; /* #23b99a mint */
     --accent-foreground: 0 0% 100%;
 
-    --font-display: 'Nunito', sans-serif;
+    --font-display: 'Baloo 2', cursive;
     --font-body: 'Inter', sans-serif;
   }
 
   body {
-    @apply bg-background text-foreground font-body overflow-hidden;
+    @apply bg-background text-foreground overflow-hidden;
     background-color: hsl(var(--background));
+    font-family: var(--font-body);
   }
   
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
   }
+}
+
+.star {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  animation: twinkle var(--duration, 2s) infinite ease-in-out;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
 }

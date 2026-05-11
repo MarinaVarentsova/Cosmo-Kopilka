@@ -1,11 +1,16 @@
-const express = require("express");
-const path = require("path");
-const https = require("https");
+import express from "express";
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+import https from "https";
+
+const require = createRequire(import.meta.url);
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(join(__dirname, "public")));
 
 let ratesCache = null;
 let ratesCacheTime = 0;
@@ -59,7 +64,7 @@ app.get("/api/rates", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(join(__dirname, "public", "index.html"));
 });
 
 app.listen(PORT, "0.0.0.0", () => {
