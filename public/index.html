@@ -712,16 +712,17 @@ button.danger {
 .scene-demo-link {
   display: block;
   text-align: center;
-  margin-top: 12px;
-  padding: 10px 0;
-  color: var(--accent);
+  margin-top: 20px;
+  margin-bottom: 4px;
+  padding: 12px 0;
+  color: var(--mint);
   font-size: 13px;
   font-weight: 900;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
-  opacity: 0.8;
-  transition: opacity 120ms;
+  opacity: 0.75;
+  transition: opacity 140ms;
 }
 .scene-demo-link:hover { opacity: 1; }
 
@@ -1183,6 +1184,9 @@ button:focus {
   .chart {
     height: 200px;
   }
+  .controls-space-scene {
+    height: 170px;
+  }
 }
 
 /* ═══ Tablet only (641–980px): 2-col hero, left panels side-by-side ═══ */
@@ -1194,6 +1198,7 @@ button:focus {
   .hero-copy {
     grid-column: 1 / -1;
     min-height: auto;
+    padding-bottom: 56px;
   }
   .left-top-group {
     flex-direction: row;
@@ -1209,28 +1214,41 @@ button:focus {
   .scenario-list {
     grid-template-columns: repeat(3, 1fr);
   }
+  .demo-link {
+    width: 52px;
+    height: 52px;
+    font-size: 24px;
+    bottom: 14px;
+    right: 14px;
+  }
 }
 
 /* ═══ Mobile (≤640px): single column ═══ */
 @media (max-width: 640px) {
   .app {
-    width: calc(100% - 24px);
-    padding: 14px 0;
+    width: calc(100% - 20px);
+    padding: 12px 0;
+    gap: 14px;
   }
 
   .hero {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
-  .hero-copy,
+  .hero-copy {
+    padding: 18px 18px 60px;
+    border-radius: 18px;
+  }
+
   .balance-card,
   .panel {
     padding: 16px;
-    border-radius: 16px;
+    border-radius: 18px;
   }
 
   h1 {
-    font-size: clamp(34px, 11vw, 54px);
+    font-size: clamp(32px, 10vw, 52px);
   }
 
   h2 {
@@ -1238,12 +1256,33 @@ button:focus {
   }
 
   .rocket-stage {
-    min-height: 180px;
+    min-height: 170px;
+  }
+
+  .controls-space-scene {
+    height: 150px;
+  }
+
+  .scene-rocket {
+    font-size: 24px;
+  }
+
+  .demo-link {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+    bottom: 12px;
+    right: 12px;
+  }
+
+  .demo-link::after {
+    font-size: 9px;
+    bottom: -18px;
   }
 
   .left-top-group {
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
   }
 
   .section-title,
@@ -1270,7 +1309,7 @@ button:focus {
   }
 
   .history-item {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 90px 1fr auto;
     gap: 6px;
   }
 
@@ -1283,10 +1322,14 @@ button:focus {
     font-size: 18px;
   }
 
+  .year-table {
+    font-size: 11px;
+  }
+
   .year-table th,
   .year-table td {
-    padding: 7px 8px;
-    font-size: 12px;
+    padding: 6px 6px;
+    font-size: 11px;
   }
 
   .period-chips {
@@ -1296,6 +1339,44 @@ button:focus {
   .period-chip {
     padding: 3px 9px;
     font-size: 11px;
+  }
+
+  .scene-demo-link {
+    font-size: 12px;
+    margin-top: 14px;
+  }
+
+  .planet-main {
+    width: 110px;
+    height: 110px;
+  }
+
+  .planet-blue {
+    width: 44px;
+    height: 44px;
+  }
+
+  .coin {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+}
+
+/* ═══ Very small screens (≤380px) ═══ */
+@media (max-width: 380px) {
+  h1 {
+    font-size: 28px;
+  }
+  .hero-copy {
+    padding: 14px 14px 54px;
+  }
+  .scenario-list {
+    grid-template-columns: 1fr;
+  }
+  .year-table {
+    display: block;
+    overflow-x: auto;
   }
 }
     </style>
