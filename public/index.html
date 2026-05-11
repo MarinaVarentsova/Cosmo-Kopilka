@@ -392,6 +392,54 @@ p {
   gap: 16px;
 }
 
+.year-table-wrap {
+  overflow-x: auto;
+}
+
+.year-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.year-table th {
+  text-align: right;
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--muted);
+  padding: 0 10px 10px;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.year-table th:first-child {
+  text-align: left;
+}
+
+.year-table td {
+  padding: 8px 10px;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.year-table td:first-child {
+  text-align: left;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.year-table tr:last-child td {
+  border-bottom: none;
+  background: #f3f4ff;
+  font-weight: 900;
+}
+
+.year-table .cell-interest {
+  color: var(--leaf);
+}
+
 output {
   min-width: max-content;
   border-radius: 999px;
@@ -1140,6 +1188,29 @@ button:focus {
             </article>
           </section>
 
+          <section class="panel year-table-panel">
+            <div class="section-title" style="margin-bottom:16px">
+              <div>
+                <h2>Как именно работают</h2>
+                <p>Помесячный расчёт на 1 год с учётом ставки и взносов.</p>
+              </div>
+            </div>
+            <div class="year-table-wrap">
+              <table class="year-table" id="yearTable">
+                <thead>
+                  <tr>
+                    <th>Период</th>
+                    <th>Сумма в начало</th>
+                    <th>Ставка % в мес.</th>
+                    <th>Начислено</th>
+                    <th>Сумма в конец</th>
+                  </tr>
+                </thead>
+                <tbody id="yearTableBody"></tbody>
+              </table>
+            </div>
+          </section>
+
           <section class="panel history-panel">
             <div class="history-title">
               <h2>Дневник решений</h2>
@@ -1791,6 +1862,34 @@ function renderHistory() {
   });
 }
 
+function renderYearTable() {
+  const tbody = document.querySelector("#yearTableBody");
+  if (!tbody) return;
+  const balance = Math.max(Number(state.balance), 0);
+  const annualRate = Math.max(Number(state.annualRate), 0);
+  const monthlyRate = annualRate / 100 / 12;
+  const topUp = Math.max(Number(state.monthlyTopUp), 0);
+  const labels = ["1 мес.","2 мес.","3 мес.","4 мес.","5 мес.","6 мес.",
+                  "7 мес.","8 мес.","9 мес.","10 мес.","11 мес.","1 год"];
+  let cur = balance;
+  let rows = "";
+  for (let i = 0; i < 12; i++) {
+    const start = Math.round(cur);
+    const interest = Math.round(cur * monthlyRate);
+    cur = cur + interest + topUp;
+    const end = Math.round(cur);
+    const rateStr = annualRate > 0 ? `${(monthlyRate * 100).toFixed(2)}%` : "0%";
+    rows += `<tr>
+      <td>${labels[i]}</td>
+      <td>${start.toLocaleString("ru-RU")} ₽</td>
+      <td>${rateStr}</td>
+      <td class="cell-interest">${interest.toLocaleString("ru-RU")} ₽</td>
+      <td>${end.toLocaleString("ru-RU")} ₽</td>
+    </tr>`;
+  }
+  tbody.innerHTML = rows;
+}
+
 function render() {
   syncInputs();
   const total = Math.max(Number(state.balance), 0);
@@ -1799,6 +1898,7 @@ function render() {
   renderGoalInsight(total);
   renderScenarios(total);
   renderChart(total);
+  renderYearTable();
   renderHistory();
 }
 
