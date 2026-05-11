@@ -349,16 +349,21 @@ p {
   gap: 18px;
 }
 
-.left-col,
-.right-col {
-  display: grid;
+.left-top-group {
+  display: flex;
+  flex-direction: column;
   gap: 18px;
-  align-content: start;
+}
+
+.currency-panel {
+  flex: 1;
+  min-height: 0;
 }
 
 .main-column {
   display: grid;
   gap: 18px;
+  align-content: start;
 }
 
 .panel {
@@ -911,8 +916,7 @@ button:focus {
     grid-template-columns: 1fr;
   }
 
-  .left-col,
-  .right-col {
+  .left-top-group {
     gap: 14px;
   }
 
@@ -982,17 +986,62 @@ button:focus {
       </section>
 
       <div class="app-grid">
-        <div class="left-col">
-        <section class="panel big-control">
+
+        <!-- col 1 row 1: Деньги сейчас + Валюта просмотра -->
+        <div class="left-top-group">
+          <section class="panel big-control">
+            <div class="section-title">
+              <div>
+                <h2>Деньги сейчас</h2>
+                <p>Нажми на сумму, чтобы ввести вручную.</p>
+              </div>
+              <output id="balanceOutput">0 ₽</output>
+            </div>
+          </section>
+
+          <section class="panel currency-panel">
+            <label class="select-field">
+              <span>Валюта просмотра</span>
+              <select id="currency">
+                <option value="USD">$ доллар</option>
+                <option value="CNY">¥ юань</option>
+                <option value="EUR">€ евро</option>
+              </select>
+            </label>
+            <div class="rate-display">
+              <span id="rateValue" class="rate-value"></span>
+              <span id="ratesStatus" class="rates-status"></span>
+            </div>
+          </section>
+        </div>
+
+        <!-- col 2 row 1: Мои цели -->
+        <section class="panel goal-panel">
           <div class="section-title">
             <div>
-              <h2>Деньги сейчас</h2>
-              <p>Нажми на сумму, чтобы ввести вручную.</p>
+              <h2>Мои цели</h2>
+              <p>Выбери цель, а потом настрой её имя и сумму.</p>
             </div>
-            <output id="balanceOutput">0 ₽</output>
+            <button id="addGoalButton" type="button" class="chip add-goal">+ цель</button>
+          </div>
+          <div id="goalList" class="goal-list"></div>
+          <div class="goal-meter">
+            <div class="progress-top">
+              <span id="goalLabel">Новая мечта</span>
+              <strong id="goalPercent">0%</strong>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div id="goalBar" class="progress-fill"></div>
+              </div>
+              <span id="goalRocket" class="goal-rocket" aria-hidden="true">🚀</span>
+            </div>
+            <p id="goalLeft">Осталось 20 000 ₽</p>
+            <p id="goalWhen"></p>
           </div>
         </section>
 
+        <!-- col 1 row 2: Рычажки будущего -->
         <aside class="panel controls-panel">
           <h2>Рычажки будущего</h2>
 
@@ -1027,48 +1076,9 @@ button:focus {
           </label>
 
           <div id="goalInsight" class="goal-insight"></div>
-
-          <label class="select-field">
-            <span>Валюта просмотра</span>
-            <select id="currency">
-              <option value="USD">$ доллар</option>
-              <option value="CNY">¥ юань</option>
-              <option value="EUR">€ евро</option>
-            </select>
-          </label>
-          <div class="rate-display">
-            <span id="rateValue" class="rate-value"></span>
-            <span id="ratesStatus" class="rates-status"></span>
-          </div>
         </aside>
-        </div>
 
-        <div class="right-col">
-        <section class="panel goal-panel">
-          <div class="section-title">
-            <div>
-              <h2>Мои цели</h2>
-              <p>Выбери цель, а потом настрой её имя и сумму.</p>
-            </div>
-            <button id="addGoalButton" type="button" class="chip add-goal">+ цель</button>
-          </div>
-          <div id="goalList" class="goal-list"></div>
-          <div class="goal-meter">
-            <div class="progress-top">
-              <span id="goalLabel">Новая мечта</span>
-              <strong id="goalPercent">0%</strong>
-            </div>
-            <div class="progress-wrap">
-              <div class="progress-track">
-                <div id="goalBar" class="progress-fill"></div>
-              </div>
-              <span id="goalRocket" class="goal-rocket" aria-hidden="true">🚀</span>
-            </div>
-            <p id="goalLeft">Осталось 20 000 ₽</p>
-            <p id="goalWhen"></p>
-          </div>
-        </section>
-
+        <!-- col 2 row 2: main-column -->
         <section class="main-column">
           <section class="panel action-panel">
             <div class="section-title">
@@ -1137,7 +1147,7 @@ button:focus {
             <div id="historyList" class="history-list"></div>
           </section>
         </section>
-        </div>
+
       </div>
     </main>
 
