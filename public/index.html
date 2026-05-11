@@ -360,6 +360,19 @@ p {
   min-height: 0;
 }
 
+.currency-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  appearance: auto;
+}
+
 .main-column {
   display: grid;
   gap: 18px;
@@ -998,20 +1011,23 @@ button:focus {
                 <h2>Деньги сейчас</h2>
                 <p>Нажми на сумму, чтобы ввести вручную.</p>
               </div>
-              <output id="balanceOutput">0 ₽</output>
+              <div style="display:grid;gap:4px;text-align:right">
+                <output id="balanceOutput">0 ₽</output>
+                <small id="balanceInCurrency" style="font-size:13px;font-weight:900;color:var(--muted)">0 $</small>
+              </div>
             </div>
           </section>
 
           <section class="panel currency-panel">
-            <label class="select-field">
-              <span>Валюта просмотра</span>
-              <select id="currency">
-                <option value="USD">$ доллар</option>
-                <option value="CNY">¥ юань</option>
-                <option value="EUR">€ евро</option>
-              </select>
-            </label>
-            <div class="rate-display">
+            <div class="section-title" style="margin-bottom:12px">
+              <h2>Валюта просмотра</h2>
+            </div>
+            <select id="currency" class="currency-select">
+              <option value="USD">$ доллар</option>
+              <option value="CNY">¥ юань</option>
+              <option value="EUR">€ евро</option>
+            </select>
+            <div class="rate-display" style="margin-top:10px;margin-bottom:0">
               <span id="rateValue" class="rate-value"></span>
               <span id="ratesStatus" class="rates-status"></span>
             </div>
@@ -1210,6 +1226,7 @@ const elements = {
   goalWhen: document.querySelector("#goalWhen"),
   planetFill: document.querySelector("#planetFill"),
   levelBadge: document.querySelector("#levelBadge"),
+  balanceInCurrency: document.querySelector("#balanceInCurrency"),
   transactionForm: document.querySelector("#transactionForm"),
   transactionAmount: document.querySelector("#transactionAmount"),
   transactionAmountOutput: document.querySelector("#transactionAmountOutput"),
@@ -1607,6 +1624,7 @@ function renderSummary(total) {
 
   elements.currentBalance.textContent = money(total);
   elements.convertedBalance.textContent = convertedMoney(total);
+  elements.balanceInCurrency.textContent = convertedMoney(total);
   elements.goalLabel.textContent = goal.name;
   elements.goalPercent.textContent = `${Math.round(percent)}%`;
   elements.goalBar.style.width = `${percent}%`;
