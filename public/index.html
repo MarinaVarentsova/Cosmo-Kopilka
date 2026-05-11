@@ -983,11 +983,11 @@ button:focus {
                 <h2>Записать событие</h2>
                 <p>Нажми на сумму или двигай ползунок.</p>
               </div>
-              <output id="transactionAmountOutput">100 ₽</output>
+              <output id="transactionAmountOutput">0 ₽</output>
             </div>
 
             <form id="transactionForm" class="transaction-form">
-              <input id="transactionAmount" type="range" min="100" max="500000" step="100" value="100" />
+              <input id="transactionAmount" type="range" min="0" max="500000" step="100" value="0" />
               <label class="note-field">
                 <span>Подпись</span>
                 <input id="transactionNote" type="text" maxlength="60" placeholder="Например: подарок или покупка" />
@@ -1810,7 +1810,7 @@ makeOutputEditable(elements.monthlyTopUpOutput, (val) => {
 }, { min: 0, step: 100 });
 
 makeOutputEditable(elements.transactionAmountOutput, (val) => {
-  const clamped = Math.max(val, 100);
+  const clamped = Math.max(val, 0);
   elements.transactionAmount.value = Math.min(clamped, 500000);
   elements.transactionAmountOutput.textContent = shortMoney(clamped);
 }, { min: 100, step: 100 });
