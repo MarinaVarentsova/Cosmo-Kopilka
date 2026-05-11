@@ -696,19 +696,22 @@ button:focus {
   margin-left: 6px;
 }
 
-.action-panel,
 .transaction-form {
   display: grid;
   gap: 10px;
 }
 
-.action-panel .section-title h2 {
-  font-size: 18px;
+.controls-divider {
+  border: none;
+  border-top: 2px solid rgba(35,48,71,0.08);
+  margin: 8px 0;
 }
 
-.action-panel .section-title p {
-  font-size: 12px;
-  margin-top: 2px;
+.controls-subhead {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--ink);
+  margin: 0 0 4px;
 }
 
 .interest-count {
@@ -1076,46 +1079,40 @@ button:focus {
           </label>
 
           <div id="goalInsight" class="goal-insight"></div>
+
+          <hr class="controls-divider" />
+          <h3 class="controls-subhead">Записать событие</h3>
+          <form id="transactionForm" class="transaction-form">
+            <label class="slider-field">
+              <span>Сумма</span>
+              <output id="transactionAmountOutput">0 ₽</output>
+              <input id="transactionAmount" type="range" min="0" max="500000" step="100" value="0" />
+            </label>
+            <label class="note-field">
+              <span>Наименование события</span>
+              <input id="transactionNote" type="text" maxlength="60" placeholder="Например: подарок или покупка" />
+            </label>
+            <div class="button-row">
+              <button type="submit" value="deposit">Добавить</button>
+              <button type="submit" value="withdraw" class="secondary">Потратить</button>
+            </div>
+          </form>
+          <button type="button" id="interestButton" class="ghost" style="width:100%;margin-top:8px">Проценты за месяц<span id="interestCountBadge" class="interest-count" style="display:none">0</span></button>
+
+          <div class="simulate-row" style="margin-top:12px">
+            <span>Промотать вперёд:</span>
+            <button type="button" class="sim-btn" data-months="1">1 мес</button>
+            <button type="button" class="sim-btn" data-months="3">3 мес</button>
+            <button type="button" class="sim-btn" data-months="6">6 мес</button>
+            <button type="button" class="sim-btn" data-months="12">1 год</button>
+            <button type="button" class="sim-btn" data-months="24">2 года</button>
+            <button type="button" class="sim-btn" data-months="60">5 лет</button>
+          </div>
+          <button id="resetButtonAction" type="button" class="ghost danger" style="width:100%;margin-top:8px">Начать заново</button>
         </aside>
 
         <!-- col 2 row 2: main-column -->
         <section class="main-column">
-          <section class="panel action-panel">
-            <div class="section-title">
-              <div>
-                <h2>Записать событие</h2>
-                <p>Нажми на сумму или двигай ползунок.</p>
-              </div>
-              <output id="transactionAmountOutput">0 ₽</output>
-            </div>
-
-            <form id="transactionForm" class="transaction-form">
-              <input id="transactionAmount" type="range" min="0" max="500000" step="100" value="0" />
-              <label class="note-field">
-                <span>Подпись</span>
-                <input id="transactionNote" type="text" maxlength="60" placeholder="Например: подарок или покупка" />
-              </label>
-              <div class="button-row">
-                <button type="submit" value="deposit">Добавить</button>
-                <button type="submit" value="withdraw" class="secondary">Потратить</button>
-                <button type="button" id="interestButton" class="ghost">Проценты за месяц<span id="interestCountBadge" class="interest-count" style="display:none">0</span></button>
-              </div>
-            </form>
-
-            <div class="action-footer">
-              <div class="simulate-row" style="border:none;padding:0;flex:1">
-                <span>Промотать вперёд:</span>
-                <button type="button" class="sim-btn" data-months="1">1 мес</button>
-                <button type="button" class="sim-btn" data-months="3">3 мес</button>
-                <button type="button" class="sim-btn" data-months="6">6 мес</button>
-                <button type="button" class="sim-btn" data-months="12">1 год</button>
-                <button type="button" class="sim-btn" data-months="24">2 года</button>
-                <button type="button" class="sim-btn" data-months="60">5 лет</button>
-              </div>
-              <button id="resetButtonAction" type="button" class="ghost danger" style="white-space:nowrap;flex-shrink:0">Начать заново</button>
-            </div>
-          </section>
-
           <section class="scenario-grid" aria-label="Прогноз">
             <article class="panel scenario-wide">
               <div class="section-title">
