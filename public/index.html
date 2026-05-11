@@ -363,14 +363,20 @@ p {
 .currency-select {
   width: 100%;
   padding: 10px 14px;
-  border: 2px solid var(--border);
+  border: 2px solid #ffe566;
   border-radius: 12px;
   font-size: 15px;
   font-weight: 700;
-  background: #fff;
+  background: #fff1bd;
   color: var(--ink);
   cursor: pointer;
   appearance: auto;
+  transition: background 120ms, border-color 120ms;
+}
+
+.currency-select:hover {
+  background: #ffe566;
+  border-color: #ffd700;
 }
 
 .main-column {
