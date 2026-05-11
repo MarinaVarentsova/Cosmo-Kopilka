@@ -107,78 +107,108 @@ p {
   color: var(--muted);
 }
 
+/* ── Planet stage ── */
 .rocket-stage {
   position: relative;
   min-height: 260px;
   overflow: hidden;
   border-radius: 22px;
-  background:
-    linear-gradient(160deg, #2f3f88, #5d77da 58%, #91d7ff);
+  background: linear-gradient(160deg, #1a2560, #2f3f88 55%, #5168c8);
   box-shadow: var(--shadow);
 }
 
-.rocket {
-  position: absolute;
-  left: 50%;
-  top: 42%;
-  width: 72px;
-  height: 126px;
-  transform: translate(-50%, -50%) rotate(18deg);
-  border-radius: 48% 48% 18px 18px;
-  background: linear-gradient(90deg, #ffffff, #dff2ff);
-  border: 4px solid #26325e;
-}
-
-.rocket::before {
+.rocket-stage::before {
   content: "";
   position: absolute;
-  inset: -22px 16px auto;
-  height: 32px;
-  border-radius: 50% 50% 0 0;
-  background: var(--coral);
-  border: 4px solid #26325e;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 72% 12%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 52%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 38% 78%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 62% 88%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 22% 62%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 28%, #fff 0%, transparent 100%),
+    radial-gradient(1px 1px at 8% 44%, #fff 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 50% 8%, #fff 0%, transparent 100%);
+  animation: twinkle 4s ease-in-out infinite alternate;
+  pointer-events: none;
 }
 
-.rocket-window {
+@keyframes twinkle {
+  from { opacity: 0.55; }
+  to   { opacity: 1; }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes bob-planet {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50%       { transform: translate(-50%, -50%) translateY(-8px); }
+}
+
+@keyframes wave {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Planet-копилка */
+.planet-main {
   position: absolute;
-  left: 18px;
-  top: 28px;
-  width: 30px;
-  height: 30px;
+  left: 50%;
+  top: 50%;
+  width: 148px;
+  height: 148px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: var(--sky);
-  border: 4px solid #26325e;
+  border: 3px solid rgba(255,255,255,0.28);
+  overflow: hidden;
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 0 32px rgba(100,180,255,0.35), inset 0 0 20px rgba(0,0,0,0.28);
+  animation: bob-planet 6s ease-in-out infinite;
 }
 
-.rocket-fin {
+.planet-fill {
   position: absolute;
-  bottom: 10px;
-  width: 28px;
-  height: 42px;
-  background: var(--sun);
-  border: 4px solid #26325e;
+  bottom: 0;
+  left: -25%;
+  right: -25%;
+  height: 0%;
+  background: linear-gradient(180deg, #56d6c9 0%, #4eaad6 100%);
+  transition: height 900ms cubic-bezier(0.34,1.4,0.64,1);
 }
 
-.rocket-fin.left {
-  left: -22px;
-  border-radius: 18px 0 12px 18px;
-}
-
-.rocket-fin.right {
-  right: -22px;
-  border-radius: 0 18px 18px 12px;
-}
-
-.rocket-fire {
+.planet-fill::before {
+  content: "₽";
   position: absolute;
-  left: 18px;
-  bottom: -48px;
-  width: 30px;
-  height: 56px;
-  border-radius: 0 0 50% 50%;
-  background: linear-gradient(#ff9f1c, #ff4d4d);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.88);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  pointer-events: none;
 }
 
+.planet-fill::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 200%;
+  height: 20px;
+  background:
+    radial-gradient(ellipse 34px 10px at 25% 50%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    radial-gradient(ellipse 34px 10px at 75% 50%, rgba(255,255,255,0.55) 0%, transparent 100%);
+  animation: wave 2.8s linear infinite;
+}
+
+/* Decorative planets */
 .planet,
 .coin {
   position: absolute;
@@ -186,46 +216,112 @@ p {
 }
 
 .planet-blue {
-  width: 82px;
-  height: 82px;
-  left: 18px;
+  width: 58px;
+  height: 58px;
+  left: 14px;
   bottom: 20px;
   background: #56d6c9;
-  box-shadow: inset -12px -12px 0 rgba(35, 48, 71, 0.16);
+  box-shadow: inset -8px -8px 0 rgba(35,48,71,0.18);
+  animation: bob 5.2s ease-in-out infinite;
 }
 
 .planet-yellow {
-  width: 42px;
-  height: 42px;
-  right: 28px;
-  top: 28px;
+  width: 34px;
+  height: 34px;
+  right: 22px;
+  top: 22px;
   background: var(--sun);
+  animation: bob 7s ease-in-out 1s infinite;
 }
 
 .coin {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   display: grid;
   place-items: center;
   background: var(--sun);
-  border: 4px solid #26325e;
+  border: 3px solid #26325e;
   color: #26325e;
+  font-size: 14px;
   font-weight: 900;
 }
 
 .coin-one {
-  left: 30px;
-  top: 24px;
+  left: 24px;
+  top: 20px;
+  animation: bob 4.5s ease-in-out 0.5s infinite;
 }
 
 .coin-two {
-  right: 26px;
-  bottom: 38px;
+  right: 20px;
+  bottom: 30px;
+  animation: bob 5.5s ease-in-out 1.5s infinite;
 }
 
 .coin-three {
-  left: 55%;
-  bottom: 20px;
+  left: 54%;
+  bottom: 16px;
+  animation: bob 6s ease-in-out 2s infinite;
+}
+
+/* ── Уровень копильщика ── */
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--ink);
+  background: rgba(35,48,71,0.07);
+  border-radius: 999px;
+  padding: 3px 10px;
+  width: fit-content;
+}
+
+/* ── Ракета на прогресс-баре ── */
+.progress-wrap {
+  position: relative;
+  margin: 2px 0;
+}
+
+.progress-track {
+  height: 22px;
+  border: 3px solid rgba(35,48,71,0.08);
+  border-radius: 999px;
+  background: #fff4c8;
+  overflow: hidden;
+}
+
+.goal-rocket {
+  position: absolute;
+  left: 0%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  line-height: 1;
+  transition: left 180ms ease;
+  pointer-events: none;
+  z-index: 2;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+}
+
+/* ── Конфетти ── */
+.confetti-piece {
+  position: fixed;
+  top: -12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  animation: confetti-fall linear forwards;
+}
+
+@keyframes confetti-fall {
+  0%   { transform: translateY(0)    rotate(0deg);   opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
 }
 
 .balance-card {
@@ -866,11 +962,8 @@ button:focus {
         <div class="rocket-stage" aria-hidden="true">
           <div class="planet planet-blue"></div>
           <div class="planet planet-yellow"></div>
-          <div class="rocket">
-            <div class="rocket-window"></div>
-            <div class="rocket-fin left"></div>
-            <div class="rocket-fin right"></div>
-            <div class="rocket-fire"></div>
+          <div class="planet-main">
+            <div id="planetFill" class="planet-fill"></div>
           </div>
           <div class="coin coin-one">₽</div>
           <div class="coin coin-two">%</div>
@@ -881,6 +974,7 @@ button:focus {
           <span>Сейчас в копилке</span>
           <strong id="currentBalance">0 ₽</strong>
           <small id="convertedBalance">0 $</small>
+          <span id="levelBadge" class="level-badge">🌱 Новичок</span>
         </div>
       </section>
 
@@ -917,8 +1011,11 @@ button:focus {
               <span id="goalLabel">Новая мечта</span>
               <strong id="goalPercent">0%</strong>
             </div>
-            <div class="progress-track">
-              <div id="goalBar" class="progress-fill"></div>
+            <div class="progress-wrap">
+              <div class="progress-track">
+                <div id="goalBar" class="progress-fill"></div>
+              </div>
+              <span id="goalRocket" class="goal-rocket" aria-hidden="true">🚀</span>
             </div>
             <p id="goalLeft">Осталось 20 000 ₽</p>
             <p id="goalWhen"></p>
@@ -1117,8 +1214,11 @@ const elements = {
   goalLabel: document.querySelector("#goalLabel"),
   goalPercent: document.querySelector("#goalPercent"),
   goalBar: document.querySelector("#goalBar"),
+  goalRocket: document.querySelector("#goalRocket"),
   goalLeft: document.querySelector("#goalLeft"),
   goalWhen: document.querySelector("#goalWhen"),
+  planetFill: document.querySelector("#planetFill"),
+  levelBadge: document.querySelector("#levelBadge"),
   interestCountBadge: document.querySelector("#interestCountBadge"),
   resetButtonAction: document.querySelector("#resetButtonAction"),
   transactionForm: document.querySelector("#transactionForm"),
@@ -1524,8 +1624,14 @@ function renderSummary(total) {
   elements.goalPercent.textContent = `${Math.round(percent)}%`;
   elements.goalBar.style.width = `${percent}%`;
 
+  elements.planetFill.style.height = `${Math.min(percent, 100)}%`;
+  elements.goalRocket.style.left = `${Math.max(2, Math.min(percent, 97))}%`;
+  elements.levelBadge.textContent = levelFromBalance(total);
+
+  const wasGoalMet = elements.goalLeft.dataset.met === "1";
   if (left > 0) {
     elements.goalLeft.innerHTML = `Осталось ${money(left)} <span>${convertedMoney(left)}</span>`;
+    elements.goalLeft.dataset.met = "0";
     const n = monthsToGoal(total, goalAmount, Number(state.annualRate), Number(state.monthlyTopUp));
     if (isFinite(n) && n > 0) {
       const arrival = new Date();
@@ -1539,7 +1645,37 @@ function renderSummary(total) {
     }
   } else {
     elements.goalLeft.innerHTML = `Цель достигнута <span>${convertedMoney(total)}</span>`;
+    elements.goalLeft.dataset.met = "1";
     elements.goalWhen.textContent = "🎉";
+    if (!wasGoalMet) launchConfetti();
+  }
+}
+
+function levelFromBalance(total) {
+  if (total >= 100000) return "⭐ Командор";
+  if (total >= 50000)  return "🚀 Астронавт";
+  if (total >= 10000)  return "🔭 Искатель";
+  return "🌱 Новичок";
+}
+
+let confettiBurst = false;
+function launchConfetti() {
+  if (confettiBurst) return;
+  confettiBurst = true;
+  setTimeout(() => { confettiBurst = false; }, 3000);
+  const colors = ["#ff9f1c","#56d6c9","#7d5fff","#ff6b6b","#ffd700","#56c9d6","#ff4d8b"];
+  for (let i = 0; i < 50; i++) {
+    const el = document.createElement("div");
+    el.className = "confetti-piece";
+    el.style.left = (Math.random() * 100) + "vw";
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width = (7 + Math.random() * 9) + "px";
+    el.style.height = (7 + Math.random() * 9) + "px";
+    el.style.borderRadius = Math.random() > 0.5 ? "50%" : "3px";
+    el.style.animationDelay = (Math.random() * 0.8) + "s";
+    el.style.animationDuration = (1.8 + Math.random() * 1.8) + "s";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 4000);
   }
 }
 
